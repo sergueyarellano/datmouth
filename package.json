@@ -1,0 +1,29 @@
+{
+  "name": "bucko",
+  "version": "1.0.0",
+  "description": "p2p chat. For pirates like us!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cuid": "^2.1.8",
+    "hyperswarm": "^2.11.2",
+    "kappa-core": "^6.0.0",
+    "kappa-view-list": "^1.2.0",
+    "memdb": "^1.3.1",
+    "minimist": "^1.2.5",
+    "pump": "^3.0.0",
+    "serverline": "^1.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsarmy/bucko.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsarmy/bucko/issues"
+  },
+  "homepage": "https://github.com/jsarmy/bucko#readme"
+}

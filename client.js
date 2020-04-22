@@ -2,9 +2,9 @@ const bucko = require('./core')
 const argv = require('minimist')(process.argv.slice(2))
 const myUI = require('./ui')
 
-init()
+module.exports = client
 
-async function init () {
+async function client () {
   const aye = await bucko(argv.t, argv.l)
   const ui = myUI(aye.getNickname())
 

@@ -1,5 +1,4 @@
 const core = require('./core')
-const argv = require('minimist')(process.argv.slice(2))
 const myUI = require('./ui')
 
 module.exports = client

@@ -1,8 +1,8 @@
 {
-  "name": "bucko-client",
+  "name": "bucko",
   "version": "1.0.0",
   "description": "p2p chat. For pirates like us!",
-  "main": "client.js",
+  "bin": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "standard"
@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jsarmy/bucko-client.git"
+    "url": "git+https://github.com/jsarmy/bucko.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jsarmy/bucko-client/issues"
+    "url": "https://github.com/jsarmy/bucko/issues"
   },
-  "homepage": "https://github.com/jsarmy/bucko-client#readme"
+  "homepage": "https://github.com/jsarmy/bucko#readme"
 }

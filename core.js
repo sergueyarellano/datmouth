@@ -17,7 +17,9 @@ async function createBucko (topicName, localRef = '') {
   core.use('chat', views.createMessagesView(db))
 
   const feed = await getFeed(core)
-  let nickname = createNickname()
+  const head = await getHead(feed()).catch(err => ({})) // eslint-disable-line
+
+  let nickname = head.nickname || createNickname()
   // Important to join the swarm once the local writer is initialized
   swarm(core, topic)
 
@@ -27,6 +29,15 @@ async function createBucko (topicName, localRef = '') {
     getNickname: () => nickname,
     readTail: (fn) => tail(core, fn)
   }
+}
+
+function getHead (feed) {
+  return new Promise((resolve, reject) => {
+    feed.head((err, data) => {
+      if (err) reject(err)
+      resolve(data)
+    })
+  })
 }
 
 function tail (core, fn) {

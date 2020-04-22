@@ -17,7 +17,7 @@ module.exports = function ui (nickname) {
     display,
     setCommand: (name, fn) => {
       commands[name] = fn
-      completion.push(name)
+      completion.push('/' + name)
       sl.setCompletion(completion)
     },
     setPrompt: (value) => sl.setPrompt(chalk.magenta(`@${value}> `)),

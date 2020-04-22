@@ -58,7 +58,7 @@ async function getFeed (core) {
 function createWriter (core) {
   return new Promise((resolve, reject) => {
     core.ready(function () {
-      core.writer((err, feed) => {
+      core.writer('local', (err, feed) => {
         if (err) reject(err)
         resolve(feed)
       })

@@ -24,6 +24,7 @@ async function createBucko (topicName, localRef = '') {
   return {
     publish: (message) => publish(message, feed(), nickname),
     addNickname: (newNickname) => { nickname = newNickname },
+    getNickname: () => nickname,
     readTail: (fn) => tail(core, fn)
   }
 }

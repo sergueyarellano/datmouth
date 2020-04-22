@@ -4,7 +4,8 @@
   "description": "p2p chat. For pirates like us!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard"
   },
   "dependencies": {
     "chalk": "^4.0.0",

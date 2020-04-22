@@ -13,7 +13,9 @@ share the topic with a friend.
 
 ## Commands list
 
-// TODO:
+`/help` first pirate contact
+
+`/nick newnickname` changes your current nickname to newnickname
 
 ## Testing
 

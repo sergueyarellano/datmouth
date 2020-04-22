@@ -1,15 +1,15 @@
-const bucko = require('./core')
+const core = require('./core')
 const argv = require('minimist')(process.argv.slice(2))
 const myUI = require('./ui')
 
 module.exports = client
 
-async function client () {
-  const aye = await bucko(argv.t, argv.l)
-  const ui = myUI(aye.getNickname())
+async function client (topic, localRef = '') {
+  const bucko = await core(topic, localRef)
+  const ui = myUI(bucko.getNickname())
 
-  aye.readTail(function (tail) {
-    const nickname = aye.getNickname()
+  bucko.readTail(function (tail) {
+    const nickname = bucko.getNickname()
     const messageNick = tail.value.nickname
 
     // We don't want to display our own messages
@@ -18,11 +18,11 @@ async function client () {
   })
 
   ui.setCommand('nick', function (line) {
-    aye.addNickname(line)
+    bucko.addNickname(line)
     ui.setPrompt(line)
   })
   ui.setCommand('help', function (line) {
     ui.display('help')
   })
-  ui.onEnter(aye.publish)
+  ui.onEnter(bucko.publish)
 }

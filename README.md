@@ -1,31 +1,24 @@
-bucko
-===
+# DATmouth
 
-## Getting started
+P2P chat client that uses DAT protocol underneath.
 
-`npm install` to install node dependencies.
+Inspired by [DAT](https://dat.foundation/) foundation workshops
 
-Now you can open a terminal and 
+# Usage
 
-`node client.js -t yourtopic`
+```
+$ datmouth topicname
+```
 
-share the topic with a friend.
-
-## Commands list
-
-`/help` first pirate contact
-
-`/nick newnickname` changes your current nickname to newnickname
-
-## Testing
-
-open two terminals:
-
-terminal 1:
-- `node client.js -t yourtopic -l 1`
-
-terminal 2:
-- `node client.js -t yourtopic -l 2`
+Will join the swarm automatically. You can share the topic with a friend and start gossiping
 
 
-[some slang](docs/slang.md)
+# Already joined a topic?
+
+Commands:
+* `/help` - displays a list of commands like this section
+* `/nick newnickname` changes your current nickname to newnickname
+
+# Want to contribute?
+
+[Here](docs/devs.md) is how to get started

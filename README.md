@@ -1,8 +1,14 @@
-# DATmouth
+# datmouth
 
 P2P chat client that uses DAT protocol underneath.
 
 Inspired by [DAT](https://dat.foundation/) foundation workshops
+
+# Install
+
+```
+$ npm install -g datmouth
+```
 
 # Usage
 

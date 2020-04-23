@@ -3,31 +3,34 @@ const views = require('./views')
 const memdb = require('memdb')
 const swarm = require('./swarm')
 const cuid = require('cuid')
+const path = require('path')
 
-module.exports = createBucko
+module.exports = createDATMouth
 
-async function createBucko (topicName, localRef = '') {
+async function createDATMouth (topicName, localRef = '') {
   // for local testing localRef help us in differentiating between clients,
   // we can pass a 1, 2, 3 etc
   const topic = slug(topicName)
-  const databasePath = `./bucko-${topic}${localRef}`
-  const core = kappacore(databasePath, { valueEncoding: 'json' })
+  const databasePath = path.resolve(__dirname, `./hc-${topic}${localRef}`)
+  const kappa = kappacore(databasePath, { valueEncoding: 'json' })
 
   const db = memdb()
-  core.use('chat', views.createMessagesView(db))
+  kappa.use('chat', views.createMessagesView(db))
 
-  const feed = await getFeed(core)
+  const feed = await getFeed(kappa)
   const head = await getHead(feed()).catch(err => ({})) // eslint-disable-line
 
   let nickname = head.nickname || createNickname()
   // Important to join the swarm once the local writer is initialized
-  swarm(core, topic)
+  swarm(kappa, topic)
 
   return {
     publish: (message) => publish(message, feed(), nickname),
-    addNickname: (newNickname) => { nickname = newNickname },
+    updateNickname: (newNickname) => { nickname = newNickname },
     getNickname: () => nickname,
-    readTail: (fn) => tail(core, fn)
+    readTail: (fn) => tail(kappa, fn),
+    slug,
+    getTimestamp
   }
 }
 
@@ -40,8 +43,8 @@ function getHead (feed) {
   })
 }
 
-function tail (core, fn) {
-  core.api.chat.tail(1, (data) => fn(data[0]))
+function tail (kappa, fn) {
+  kappa.api.chat.tail(1, (data) => fn(data[0]))
 }
 
 function publish (message, feed, nickname) {
@@ -58,18 +61,18 @@ function publish (message, feed, nickname) {
   })
 }
 
-function getTimestamp () {
+function getTimestamp (date = Date.now()) {
   return new Date().toISOString()
 }
-async function getFeed (core) {
-  const feed = await createWriter(core)
+async function getFeed (kappa) {
+  const feed = await createWriter(kappa)
   return () => feed
 }
 
-function createWriter (core) {
+function createWriter (kappa) {
   return new Promise((resolve, reject) => {
-    core.ready(function () {
-      core.writer('local', (err, feed) => {
+    kappa.ready(function () {
+      kappa.writer('local', (err, feed) => {
         if (err) reject(err)
         resolve(feed)
       })

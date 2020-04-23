@@ -1,7 +1,7 @@
 {
-  "name": "bucko",
+  "name": "datmouth",
   "version": "1.0.0",
-  "description": "p2p chat. For pirates like us!",
+  "description": "p2p chat with DAT protocol",
   "bin": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jsarmy/bucko.git"
+    "url": "git+https://github.com/sergueyarellano/datmouth.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jsarmy/bucko/issues"
+    "url": "https://github.com/sergueyarellano/datmouth/issues"
   },
-  "homepage": "https://github.com/jsarmy/bucko#readme"
+  "homepage": "https://github.com/sergueyarellano/datmouth#readme"
 }

@@ -2,14 +2,8 @@ const sl = require('serverline')
 const chalk = require('chalk')
 
 module.exports = function ui (nickname) {
-  // start ui with prompt at the top of terminal
-  process.stdout.write('\x1Bc')
-  sl.init()
-  sl.setPrompt(chalk.magenta(`@${nickname}> `))
-  sl.on('SIGINT', function (rl) {
-    rl.question('Confirm exit: ', (answer) => answer.match(/^y(es)?$/i) ? process.exit(0) : rl.output.write('\x1B[1K> '))
-  })
-  sl.isMuted() && sl.setMuted(false)
+  // process.stdout.write('\x1Bc') // start ui with prompt at the top of terminal
+  sl.init({ prompt: chalk.magenta(`@${nickname}> `) })
   const completion = []
   const commands = {}
 
@@ -18,6 +12,7 @@ module.exports = function ui (nickname) {
     setCommand: (name, fn) => {
       commands[name] = fn
       completion.push('/' + name)
+      // update serverline's completion each time
       sl.setCompletion(completion)
     },
     setPrompt: (value) => sl.setPrompt(chalk.magenta(`@${value}> `)),
@@ -25,26 +20,32 @@ module.exports = function ui (nickname) {
       const isCommand = /^[/]/.test(line)
 
       if (isCommand) {
-        const args = line.split(/\s/)
-        const commandInput = args[0].slice(1) // remove the slash from the command
-        const command = commands[commandInput] || (() => {})
-        const options = args.slice(1)
-        command(...options)
+        const [_, type, options] = line.match(/^\/(\w+)(?:\s*)(.*)$/) // eslint-disable-line
+
+        const command = commands[type] || (() => {})
+        const optionsList = options.trim().split(/\s+/)
+        command(...optionsList)
       } else line.length > 0 && fn(line)
     })
   }
 }
 
-function display (type, value = {}) {
+function display ({ content = {}, type = '' }) {
+  const log = console.log.bind(console)
   const types = {
-    message: (value) => console.log(`${getTimeFromTimestamp(value.timestamp)} 💬 ${chalk.green(value.nickname)}: ${value.text}`),
-    help: () => console.log('Fock ya lad, no help naw!')
+    message: ({ timestamp, nickname, text }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk.green(nickname)}: ${text}`),
+    welcome: ({ topic, timestamp }) => log(`⚓️ Joined ${chalk.bgMagentaBright(topic)} on ${chalk.green(getDateFromTimestamp(timestamp))} once upon a ${chalk.green(getTimeFromTimestamp(timestamp))}`),
+    normal: () => log(content)
   }
 
-  const log = types[type] || ((value) => console.log('[log type not defined]', value))
-  log(value)
+  const output = types[type] || ((value) => log('[log type not defined]:', type))
+  output(content)
 }
 
 function getTimeFromTimestamp (timestamp, locale = 'en-CA') {
   return new Date(timestamp).toLocaleTimeString(locale)
+}
+
+function getDateFromTimestamp (timestamp, locale = 'en-CA') {
+  return new Date(timestamp).toLocaleDateString(locale)
 }

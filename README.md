@@ -2,7 +2,16 @@
 
 P2P chat client that uses DAT protocol underneath.
 
-Inspired by [DAT](https://dat.foundation/) foundation workshops
+Have you lost your internet connection? 
+
+Works:
+- offline
+- LAN
+- WAN
+
+Inspired by [DAT](https://dat.foundation/) foundation workshops and great packages in the community.
+
+It is a work in progress :)
 
 # Install
 
@@ -21,7 +30,6 @@ Will join the swarm automatically. You can share the topic with a friend and sta
 
 # Already joined a topic?
 
-Commands:
 ```
 Commands:
   /help                 Displays this message

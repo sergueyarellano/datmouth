@@ -58,6 +58,13 @@ async function client (topic, localRef = '') {
           /help                 Displays this message
           /nick yournickname    Changes your actual nickname
           /history 4            Displays last 4 messages received
+
+        Emacs commands:
+          CTRL-U                Remove from cursor to start of line
+          CTRL-A                Go to start of the line
+          CTRL-E                Go to end of the line
+          ALT-B                 Move cursor backwards, word by word
+          ALT-F                 Move cursor forward, word by word
         `
       }
     })

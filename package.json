@@ -1,6 +1,6 @@
 {
   "name": "datmouth",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "p2p chat with DAT protocol",
   "bin": "cli.js",
   "scripts": {
@@ -24,7 +24,15 @@
     "type": "git",
     "url": "git+https://github.com/sergueyarellano/datmouth.git"
   },
-  "author": "",
+  "keywords": [
+    "chat",
+    "p2p",
+    "dat",
+    "terminal",
+    "hypercore",
+    "swarm",
+    "kappa"
+	],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sergueyarellano/datmouth/issues"

@@ -21,11 +21,13 @@ async function createDATMouth (topicName, localRef = '') {
   const head = await getHead(feed()).catch(err => ({})) // eslint-disable-line
 
   let nickname = head.nickname || createNickname()
+  const color = head.color || assignColor()
+
   // Important to join the swarm once the local writer is initialized
   swarm(kappa, topic)
 
   return {
-    publish: (message) => publish(message, feed(), nickname),
+    publish: (message) => publish({ message, feed: feed(), nickname, color }),
     updateNickname: (newNickname) => { nickname = newNickname },
     getNickname: () => nickname,
     readLast: (size) => readLast(size, kappa),
@@ -58,12 +60,13 @@ function tail (kappa, fn) {
   kappa.api.chat.tail(1, (data) => fn(data[0]))
 }
 
-function publish (message, feed, nickname) {
+function publish ({ message, feed, nickname, color }) {
   return new Promise((resolve, reject) => {
     feed.append({
       type: 'chat',
       nickname,
       text: message,
+      color,
       timestamp: getTimestamp()
     }, function (err) {
       if (err) reject(err)
@@ -95,6 +98,21 @@ function createNickname () {
   return cuid().slice(-7)
 }
 
+function assignColor () {
+  const colors = [
+    'red', 'green', 'blue', 'white', 'blackBright', 'redBright',
+    'greenBright', 'blueBright', 'magentaBright', 'cyanBright', 'whiteBright'
+  ]
+  const randomIndex = getRandomInt(0, colors.length - 1)
+  return colors[randomIndex]
+}
+
 function slug (s) {
   return s.trim().toLocaleLowerCase().replace(/\s/g, '-')
+}
+
+function getRandomInt (min, max) {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }

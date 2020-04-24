@@ -33,7 +33,7 @@ module.exports = function ui (nickname) {
 function display ({ content = {}, type = '' }) {
   const log = console.log.bind(console)
   const types = {
-    message: ({ timestamp, nickname, text }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk.green(nickname)}: ${text}`),
+    message: ({ timestamp, nickname, text, color }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk[color].bold(nickname)}${chalk.green.bold(':')} ${text}`),
     history: ({ timestamp, nickname, text }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk.green(nickname)}: ${chalk.yellow(text)}`),
     welcome: ({ topic, timestamp }) => log(`⚓️ Joined ${chalk.bgMagentaBright(topic)} on ${chalk.green(getDateFromTimestamp(timestamp))} once upon a ${chalk.green(getTimeFromTimestamp(timestamp))}`),
     shades: () => log('\n(っ▀¯▀)つ'),

@@ -28,10 +28,20 @@ async function createDATMouth (topicName, localRef = '') {
     publish: (message) => publish(message, feed(), nickname),
     updateNickname: (newNickname) => { nickname = newNickname },
     getNickname: () => nickname,
-    readTail: (fn) => tail(kappa, fn),
+    readLast: (size) => readLast(size, kappa),
+    listenTail: (fn) => tail(kappa, fn),
     slug,
     getTimestamp
   }
+}
+
+function readLast (size, kappa) {
+  return new Promise((resolve, reject) => {
+    kappa.api.chat.read({ reverse: true, limit: Number(size) }, function (err, msgs) {
+      if (err) reject(err)
+      resolve(msgs.reverse())
+    })
+  })
 }
 
 function getHead (feed) {
@@ -44,6 +54,7 @@ function getHead (feed) {
 }
 
 function tail (kappa, fn) {
+  // listens to hypercore changes
   kappa.api.chat.tail(1, (data) => fn(data[0]))
 }
 

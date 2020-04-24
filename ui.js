@@ -34,8 +34,10 @@ function display ({ content = {}, type = '' }) {
   const log = console.log.bind(console)
   const types = {
     message: ({ timestamp, nickname, text }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk.green(nickname)}: ${text}`),
+    history: ({ timestamp, nickname, text }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk.green(nickname)}: ${chalk.yellow(text)}`),
     welcome: ({ topic, timestamp }) => log(`⚓️ Joined ${chalk.bgMagentaBright(topic)} on ${chalk.green(getDateFromTimestamp(timestamp))} once upon a ${chalk.green(getTimeFromTimestamp(timestamp))}`),
-    normal: () => log(content)
+    shades: () => log('\n(っ▀¯▀)つ'),
+    normal: ({ text }) => log(text)
   }
 
   const output = types[type] || ((value) => log('[log type not defined]:', type))

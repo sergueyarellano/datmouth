@@ -23,8 +23,11 @@ async function createDATMouth (topicName, suffix = '') {
   let nickname = head.nickname || createNickname()
   const color = head.color || assignColor()
 
+  let timeOfLastConnection = Date.now() // eslint-disable-line
+  const updateTimeOfLastConnection = (timeMS = Date.now()) => { timeOfLastConnection = timeMS }
+
   // Important to join the swarm once the local writer is initialized
-  swarm(kappa, topic)
+  swarm(kappa, topic, updateTimeOfLastConnection)
 
   return {
     publish: (message) => publish({ message, feed: feed(), nickname, color }),
@@ -32,6 +35,7 @@ async function createDATMouth (topicName, suffix = '') {
     getNickname: () => nickname,
     readLast: (size) => readLast(size, kappa),
     listenTail: (fn) => tail(kappa, fn),
+    getTimeOfLastConnection: () => timeOfLastConnection,
     slug,
     getTimestamp
   }
@@ -78,6 +82,7 @@ function publish ({ message, feed, nickname, color }) {
 function getTimestamp (date = Date.now()) {
   return new Date().toISOString()
 }
+
 async function getFeed (kappa) {
   const feed = await createWriter(kappa)
   return () => feed

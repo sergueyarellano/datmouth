@@ -4,7 +4,7 @@ const pump = require('pump')
 
 module.exports = swarm
 
-function swarm (core, topic) {
+function swarm (core, topic, updateTimeOfLastConnection) {
   const swarm = network()
   const topicDiscoveryKey = crypto.createHash('sha256').update(topic).digest()
 
@@ -14,7 +14,9 @@ function swarm (core, topic) {
   })
 
   swarm.on('connection', function (socket, details) {
-    // TODO: set timer each time there is a new connection to avoid tail pollution
+    // We update time of last connection to avoid showing old/offline messages
+    // The client will take this as a threshold to display or not new replicated messages
+    updateTimeOfLastConnection(Date.now())
     pump(socket, core.replicate(details.client, { live: true }), socket)
   })
 

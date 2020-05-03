@@ -6,21 +6,24 @@ module.exports = client
 async function client (topic, suffix = '') {
   const datMouth = await core(topic, suffix)
   const ui = myUI(datMouth.getNickname())
-  const startTimeMS = Date.now()
+
   ui.display({
     type: 'welcome',
-    content: { topic, timestamp: startTimeMS }
+    content: { topic, timestamp: datMouth.getTimeOfLastConnection() }
   })
 
   datMouth.listenTail(function (tail) {
     const nickname = datMouth.getNickname()
     const msgNickname = tail.value.nickname
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()
+    const thresholdTime = datMouth.getTimeOfLastConnection()
+    console.log('thresholdTime: ', thresholdTime)
 
-    // show messages since the moment we connect
-    // TODO: startTimeMS < msgTimestampMS just filters a weird error with tail view when we connect to a peer
-    // and replicate data, the data gets displayed automatically and incorrectly (last message is showed x times)
-    if (startTimeMS < msgTimestampMS) {
+    /*
+      Show messages since the moment we connect.
+      With every new connection we won't show the messages that others could have produced while offline.
+    */
+    if (thresholdTime < msgTimestampMS) {
       nickname !== msgNickname && ui.display({
         type: 'message',
         content: tail.value
@@ -35,6 +38,8 @@ async function client (topic, suffix = '') {
     ui.setPrompt(newNickname)
   })
 
+  // Since we are trying to avoid UI pollution,
+  // with this command, the user can choose to see past messages
   ui.setCommand('history', async function (size) {
     const messages = await datMouth.readLast(size)
     messages.forEach(msg => {

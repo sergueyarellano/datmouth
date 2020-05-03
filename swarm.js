@@ -14,6 +14,7 @@ function swarm (core, topic) {
   })
 
   swarm.on('connection', function (socket, details) {
+    // TODO: set timer each time there is a new connection to avoid tail pollution
     pump(socket, core.replicate(details.client, { live: true }), socket)
   })
 

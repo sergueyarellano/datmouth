@@ -2,9 +2,9 @@
 const argv = require('minimist')(process.argv.slice(2))
 const client = require('./client')
 const topic = argv._[0]
-const localRef = argv.l
+const suffix = argv.s
 
-if (topic) client(topic, localRef)
+if (topic) client(topic, suffix)
 else {
   console.log('Provide a topic please')
   process.exit(1)

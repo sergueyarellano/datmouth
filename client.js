@@ -3,8 +3,8 @@ const myUI = require('./ui')
 
 module.exports = client
 
-async function client (topic, localRef = '') {
-  const datMouth = await core(topic, localRef)
+async function client (topic, suffix = '') {
+  const datMouth = await core(topic, suffix)
   const ui = myUI(datMouth.getNickname())
   const startTimeMS = Date.now()
   ui.display({
@@ -18,6 +18,8 @@ async function client (topic, localRef = '') {
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()
 
     // show messages since the moment we connect
+    // TODO: startTimeMS < msgTimestampMS just filters a weird error with tail view when we connect to a peer
+    // and replicate data, the data gets displayed automatically and incorrectly (last message is showed x times)
     if (startTimeMS < msgTimestampMS) {
       nickname !== msgNickname && ui.display({
         type: 'message',

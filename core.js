@@ -7,11 +7,11 @@ const path = require('path')
 
 module.exports = createDATMouth
 
-async function createDATMouth (topicName, localRef = '') {
-  // for local testing localRef help us in differentiating between clients,
+async function createDATMouth (topicName, suffix = '') {
+  // for local testing suffix help us in differentiating between client instances,
   // we can pass a 1, 2, 3 etc
   const topic = slug(topicName)
-  const databasePath = path.resolve(__dirname, `./hc-${topic}${localRef}`)
+  const databasePath = path.resolve(__dirname, `./hc-${topic}${suffix}`)
   const kappa = kappacore(databasePath, { valueEncoding: 'json' })
 
   const db = memdb()

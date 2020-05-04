@@ -2,15 +2,16 @@ const kappacore = require('kappa-core')
 const views = require('./views')
 const memdb = require('memdb')
 const swarm = require('./swarm')
-const cuid = require('cuid')
+const { createNickname, assignColor, getTimestamp } = require('./utils')
 const path = require('path')
+const utils = require('./utils')
 
 module.exports = createDATMouth
 
 async function createDATMouth (topicName, suffix = '') {
   // for local testing suffix help us in differentiating between client instances,
   // we can pass a 1, 2, 3 etc
-  const topic = slug(topicName)
+  const topic = utils.slug(topicName)
   const databasePath = path.resolve(__dirname, `./hc-${topic}${suffix}`)
   const kappa = kappacore(databasePath, { valueEncoding: 'json' })
 
@@ -35,9 +36,7 @@ async function createDATMouth (topicName, suffix = '') {
     getNickname: () => nickname,
     readLast: (size) => readLast(size, kappa),
     listenTail: (fn) => tail(kappa, fn),
-    getTimeOfLastConnection: () => timeOfLastConnection,
-    slug,
-    getTimestamp
+    getTimeOfLastConnection: () => timeOfLastConnection
   }
 }
 
@@ -79,10 +78,6 @@ function publish ({ message, feed, nickname, color }) {
   })
 }
 
-function getTimestamp (date = Date.now()) {
-  return new Date().toISOString()
-}
-
 async function getFeed (kappa) {
   const feed = await createWriter(kappa)
   return () => feed
@@ -97,27 +92,4 @@ function createWriter (kappa) {
       })
     })
   })
-}
-
-function createNickname () {
-  return cuid().slice(-7)
-}
-
-function assignColor () {
-  const colors = [
-    'red', 'green', 'blue', 'white', 'blackBright', 'redBright',
-    'greenBright', 'blueBright', 'magentaBright', 'cyanBright', 'whiteBright'
-  ]
-  const randomIndex = getRandomInt(0, colors.length - 1)
-  return colors[randomIndex]
-}
-
-function slug (s) {
-  return s.trim().toLocaleLowerCase().replace(/\s/g, '-')
-}
-
-function getRandomInt (min, max) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min + 1)) + min
 }

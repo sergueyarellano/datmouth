@@ -11,7 +11,9 @@ Works:
 
 Inspired by [DAT](https://dat.foundation/) foundation workshops and great packages in the community.
 
-It is a work in progress :)
+datmouth does not work under **node 14** yet.
+
+hypercore, multifeed and all the dat related deck is being updated while you see this message. Hang on!
 
 # Install
 

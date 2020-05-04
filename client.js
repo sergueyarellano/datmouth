@@ -1,5 +1,6 @@
 const core = require('./core')
 const myUI = require('./ui')
+const utils = require('./utils')
 
 module.exports = client
 
@@ -17,7 +18,6 @@ async function client (topic, suffix = '') {
     const msgNickname = tail.value.nickname
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()
     const thresholdTime = datMouth.getTimeOfLastConnection()
-    console.log('thresholdTime: ', thresholdTime)
 
     /*
       Show messages since the moment we connect.
@@ -42,11 +42,11 @@ async function client (topic, suffix = '') {
   // with this command, the user can choose to see past messages
   ui.setCommand('history', async function (size) {
     const messages = await datMouth.readLast(size)
-    messages.forEach(msg => {
-      ui.display({
-        type: 'history',
-        content: msg.value
-      })
+    const enhancedMessages = utils.aggregateDateLines(messages)
+
+    enhancedMessages.forEach(msg => {
+      msg.value.type === 'chat' && ui.display({ type: 'history', content: msg.value })
+      msg.value.type === 'daychange' && ui.display({ type: 'daychange', content: msg.value })
     })
     ui.display({ type: 'shades' })
   })

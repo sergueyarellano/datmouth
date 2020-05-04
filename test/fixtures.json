@@ -1,0 +1,62 @@
+{
+  "rawMessages": [
+    {
+      "key": "7f941079d4cce463415b8fd7011f78ac7b87fd4142f2562e39db7efebe5fb6dc",
+      "seq": 5,
+      "value": {
+        "type": "chat",
+        "nickname": "2ee16qy",
+        "text": "first",
+        "color": "blue",
+        "timestamp": "2020-05-03T22:34:54.218Z"
+      }
+    },
+    {
+      "key": "7f941079d4cce463415b8fd7011f78ac7b87fd4142f2562e39db7efebe5fb6dc",
+      "seq": 6,
+      "value": {
+        "type": "chat",
+        "nickname": "2ee16qy",
+        "text": "second",
+        "color": "blue",
+        "timestamp": "2020-05-05T22:35:01.376Z"
+      }
+    }
+  ],
+  "messagesWithDateLines": [
+    {
+      "value": {
+        "type": "daychange",
+        "text": "Sun May 03 2020"
+      }
+    },
+    {
+      "key": "7f941079d4cce463415b8fd7011f78ac7b87fd4142f2562e39db7efebe5fb6dc",
+      "seq": 5,
+      "value": {
+        "type": "chat",
+        "nickname": "2ee16qy",
+        "text": "first",
+        "color": "blue",
+        "timestamp": "2020-05-03T22:34:54.218Z"
+      }
+    },
+    {
+      "value": {
+        "type": "daychange",
+        "text": "Tue May 05 2020"
+      }
+    },
+    {
+      "key": "7f941079d4cce463415b8fd7011f78ac7b87fd4142f2562e39db7efebe5fb6dc",
+      "seq": 6,
+      "value": {
+        "type": "chat",
+        "nickname": "2ee16qy",
+        "text": "second",
+        "color": "blue",
+        "timestamp": "2020-05-05T22:35:01.376Z"
+      }
+    }
+  ]
+}

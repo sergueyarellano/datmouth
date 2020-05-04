@@ -36,6 +36,7 @@ function display ({ content = {}, type = '' }) {
     message: ({ timestamp, nickname, text, color }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk[color].bold(nickname)}${chalk.green.bold(':')} ${text}`),
     history: ({ timestamp, nickname, text, color = 'green' }) => log(`${getTimeFromTimestamp(timestamp)} 💬 ${chalk[color].bold(nickname)}: ${chalk.yellow(text)}`),
     welcome: ({ topic, timestamp }) => log(`⚓️ Joined ${chalk.bgMagentaBright(topic)} on ${chalk.green(getDateFromTimestamp(timestamp))} once upon a ${chalk.green(getTimeFromTimestamp(timestamp))}`),
+    daychange: ({ text }) => log(`${text} messages:`),
     shades: () => log('\n(っ▀¯▀)つ'),
     normal: ({ text }) => log(text)
   }

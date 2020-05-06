@@ -8,6 +8,8 @@ module.exports = {
 function getColors (chalk) {
   return (...options) => {
     console.log(`
+                  ${chalk.italic(' -- Only you can see this')}
+
     (╯°□°）╯︵ ┻━┻ 
 
     1 Basic color support (16 colors):
@@ -24,6 +26,10 @@ function getColors (chalk) {
       #77F408 green   #08B7F4 blue    #F008F4 pink
 
       https://htmlcolorcodes.com/color-picker/
+
+      (Wrong pick defaults to magenta)
+
+                  ${chalk.italic('Only you can see this --')}
     `)
   }
 }
@@ -50,8 +56,10 @@ function getHistory ({ readLast, aggregateDateLines, log }) {
   }
 }
 
-function getHelp () {
+function getHelp (chalk) {
   return () => console.log(`
+                  ${chalk.italic(' -- Only you can see this')}
+
     ...(っ▀¯▀)つ
 
     Commands:
@@ -67,5 +75,7 @@ function getHelp () {
       CTRL-E                Go to end of the line
       ALT-B                 Move cursor backwards, word by word
       ALT-F                 Move cursor forward, word by word
+
+                  ${chalk.italic('Only you can see this --')}
     `)
 }

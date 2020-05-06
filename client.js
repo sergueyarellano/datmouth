@@ -31,7 +31,7 @@ async function client (topic, suffix = '') {
         aggregateDateLines: utils.aggregateDateLines,
         log: (type, content) => cli.log(type, content)
       }),
-      help: commands.getHelp(),
+      help: commands.getHelp(chalk),
       colors: commands.getColors(chalk), // list color support
       color: (color = 'magenta') => {
         datMouth.setColor(color)

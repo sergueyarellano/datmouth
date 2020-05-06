@@ -4,7 +4,7 @@ P2P chat client that uses DAT protocol underneath.
 
 Have you lost your internet connection? 
 
-Works:
+Works with peers connected:
 - offline
 - LAN
 - WAN
@@ -27,8 +27,9 @@ $ npm install -g datmouth
 $ datmouth topicname
 ```
 
-Will join the swarm automatically. You can share the topic with a friend and start gossiping
+Will join the swarm automatically. You can share the topic with a friend and start chatting
 
+![](datmouth.gif)
 
 # Already joined a topic?
 

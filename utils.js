@@ -8,6 +8,7 @@ module.exports = {
   getTimestamp,
   getTimeFromTimestamp,
   getDateFromTimestamp,
+  getTimeShort,
   getProperColorModel,
   composePrompt
 }
@@ -76,4 +77,15 @@ function getTimeFromTimestamp (timestamp, locale = 'en-CA') {
 
 function getDateFromTimestamp (timestamp, locale = 'en-CA') {
   return new Date(timestamp).toLocaleDateString(locale)
+}
+
+function getTimeShort (timestamp) {
+  const date = new Date(timestamp)
+  const hours = addZeros(date.getHours().toString())
+  const minutes = addZeros(date.getMinutes().toString())
+  return hours + ':' + minutes
+}
+
+function addZeros (s) {
+  return s.length === 1 ? `0${s}` : s
 }

@@ -21,7 +21,7 @@ async function createDATMouth (topicName, suffix = '') {
   const head = await getHead(feed()).catch(err => ({})) // eslint-disable-line
 
   let nickname = head.nickname || createNickname()
-  const color = head.color || assignColor()
+  let color = head.color || assignColor()
 
   let timeOfLastConnection = Date.now() // eslint-disable-line
   const updateTimeOfLastConnection = (timeMS = Date.now()) => { timeOfLastConnection = timeMS }
@@ -35,7 +35,9 @@ async function createDATMouth (topicName, suffix = '') {
     getNickname: () => nickname,
     readLast: (size) => readLast(size, kappa),
     listenTail: (fn) => tail(kappa, fn),
-    getTimeOfLastConnection: () => timeOfLastConnection
+    getTimeOfLastConnection: () => timeOfLastConnection,
+    setColor: (code) => { color = code },
+    getColor: () => color
   }
 }
 

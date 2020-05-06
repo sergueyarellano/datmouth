@@ -7,7 +7,17 @@ module.exports = {
   assignColor,
   getTimestamp,
   getTimeFromTimestamp,
-  getDateFromTimestamp
+  getDateFromTimestamp,
+  getProperColorModel,
+  composePrompt
+}
+
+function composePrompt ({ nick, color, chalk }) {
+  return `@${getProperColorModel(chalk, color)(nick)}> `
+}
+
+function getProperColorModel (chalk, color) {
+  return color.startsWith('#') ? chalk.hex(color) : (typeof chalk[color] === 'function' ? chalk[color] : chalk.magenta)
 }
 
 function getTimestamp (date = Date.now()) {

@@ -9,14 +9,19 @@ module.exports = client
 
 async function client (topic, suffix = '') {
   const datMouth = await core(topic, suffix)
-
   const cli = entero({
-    prompt: chalk.magenta(`@${datMouth.getNickname()}> `),
+    prompt: utils.composePrompt({
+      nick: datMouth.getNickname(),
+      color: datMouth.getColor(),
+      chalk
+    }),
     onLine: datMouth.publish,
     templates,
     commands: {
       nick: commands.getNickname({
         slug: utils.slug,
+        composePrompt: utils.composePrompt,
+        getColor: datMouth.getColor,
         updateNickname: datMouth.updateNickname,
         setPrompt: (prompt) => cli.rl.setPrompt(prompt),
         chalk
@@ -26,10 +31,21 @@ async function client (topic, suffix = '') {
         aggregateDateLines: utils.aggregateDateLines,
         log: (type, content) => cli.log(type, content)
       }),
-      help: commands.getHelp()
+      help: commands.getHelp(),
+      colors: commands.getColors(chalk), // list color support
+      color: (color = 'magenta') => {
+        datMouth.setColor(color)
+        const newPrompt = utils.composePrompt({
+          nick: datMouth.getNickname(),
+          color: datMouth.getColor(),
+          chalk
+        })
+        cli.rl.setPrompt(newPrompt)
+      }
     }
   })
 
+  cli.rl.on('SIGINT', process.exit) // exit on <ctrl>-C
   cli.log('welcome', { topic, timestamp: datMouth.getTimeOfLastConnection() })
 
   datMouth.listenTail((tail) => {

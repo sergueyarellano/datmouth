@@ -42,6 +42,8 @@ async function client (topic, suffix = '') {
         const url = text.match(/http.*/)[0]
         const hit = text.match(/#.+#/)[0]
         cli.log('message', Object.assign(tail.value, { text: '\n' + hit }))
+        // TODO: User prompt gets blocked while the gif is displaying.
+        // it is not too much, but affects UX IMO
         utils.showImage(url)
       } else {
         cli.log('message', tail.value)

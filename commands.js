@@ -1,12 +1,32 @@
-const utils = require('./utils')
 const chalk = require('chalk')
+const got = require('got')
+const utils = require('./utils')
 
 module.exports = {
   getNickname,
   getHistory,
   getColor,
+  getGiphy,
   help,
   colors
+}
+
+function getGiphy ({ datmouth }) {
+  return async (hit) => {
+    const searchParams = new URLSearchParams([['api_key', 'dc6zaTOxFJmzC'], ['q', hit]])
+    const { body: { data } } = await got('https://api.giphy.com/v1/gifs/search', {
+      responseType: 'json',
+      searchParams
+    }).catch(e => ({ body: { data: null } }))
+
+    if (data) {
+      const randomIndex = utils.getRandomInt(0, data.length)
+      const url = data[randomIndex].images.original.url
+      datmouth.publish(':gif#' + hit + '#' + url)
+    } else {
+      console.log('Could not grab the gif. Check your internet connection 📡')
+    }
+  }
 }
 
 function colors (...options) {
@@ -60,7 +80,7 @@ function getNickname ({ setPrompt, datmouth }) {
 function getHistory ({ datmouth, log }) {
   return async function (size) {
     const messages = await datmouth.readLast(size)
-    const enhancedMessages = datmouth.aggregateDateLines(messages)
+    const enhancedMessages = utils.aggregateDateLines(messages)
 
     enhancedMessages.forEach(msg => {
       msg.value.type === 'chat' && log('history', msg.value)
@@ -82,6 +102,7 @@ function help () {
       /history 4            Displays last 4 messages received
       /colors               Displays color support
       /color #B53014        Changes nickname color
+      /giphy dude           Displays a gif in the terminal
 
     Emacs commands:
       CTRL-U                Remove from cursor to start of line

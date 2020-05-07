@@ -22,7 +22,8 @@ async function client (topic, suffix = '') {
       history: commands.getHistory({ datmouth, log: (type, content) => cli.log(type, content) }),
       color: commands.getColor({ datmouth, setPrompt: (prompt) => cli.rl.setPrompt(prompt) }),
       colors: commands.colors, // list color support
-      help: commands.help
+      help: commands.help,
+      giphy: commands.getGiphy({ datmouth })
     }
   })
 
@@ -32,11 +33,21 @@ async function client (topic, suffix = '') {
   datmouth.listenTail((tail) => {
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()
     const thresholdTime = datmouth.getTimeOfLastConnection()
-
+    const text = tail.value.text
     /*
     Show messages since the moment we connect.
     With every new connection we won't show the messages that others could have produced while offline.
   */
-    thresholdTime < msgTimestampMS && cli.log('message', tail.value)
+    if (thresholdTime < msgTimestampMS) {
+      if (text.startsWith(':gif#')) {
+        const url = text.match(/http.*/)[0]
+        const hit = text.match(/#\w+#/)[0]
+        cli.log('message', Object.assign(tail.value, { text: '\n' + hit }))
+
+        utils.showImage(url)
+      } else {
+        cli.log('message', tail.value)
+      }
+    }
   })
 }

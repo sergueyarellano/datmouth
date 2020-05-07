@@ -1,4 +1,9 @@
 const cuid = require('cuid')
+const fs = require('fs')
+const termImg = require('term-img')
+const tempy = require('tempy')
+const pump = require('pump')
+const got = require('got')
 
 module.exports = {
   aggregateDateLines,
@@ -10,7 +15,9 @@ module.exports = {
   getDateFromTimestamp,
   getTimeShort,
   getProperColorModel,
-  composePrompt
+  composePrompt,
+  getRandomInt,
+  showImage
 }
 
 function composePrompt ({ nick, color, chalk }) {
@@ -23,6 +30,16 @@ function getProperColorModel (chalk, color) {
 
 function getTimestamp (date = Date.now()) {
   return new Date().toISOString()
+}
+
+function showImage (url) {
+  const path = tempy.file()
+  const image = fs.createWriteStream(path)
+
+  image.on('finish', () => {
+    termImg(path, { fallback: () => console.log(`Could not display ${url}`) })
+  })
+  pump(got.stream(url), image)
 }
 
 function aggregateDateLines (messages) {

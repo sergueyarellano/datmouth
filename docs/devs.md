@@ -19,6 +19,6 @@ node client.js yourtopic -s 2
 You can always make `cli.js` executable with 
 ```
 $ chmod +x cli.js
-$ ./cli.js test -l1
-$ ./cli.js test -l2
+$ ./cli.js test -s 1
+$ ./cli.js test -s 2
 ```

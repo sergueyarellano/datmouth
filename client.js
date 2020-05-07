@@ -41,9 +41,8 @@ async function client (topic, suffix = '') {
     if (thresholdTime < msgTimestampMS) {
       if (text.startsWith(':gif#')) {
         const url = text.match(/http.*/)[0]
-        const hit = text.match(/#\w+#/)[0]
+        const hit = text.match(/#.+#/)[0]
         cli.log('message', Object.assign(tail.value, { text: '\n' + hit }))
-
         utils.showImage(url)
       } else {
         cli.log('message', tail.value)

@@ -12,8 +12,9 @@ module.exports = {
 }
 
 function getGiphy ({ datmouth }) {
-  return async (hit) => {
-    const searchParams = new URLSearchParams([['api_key', 'dc6zaTOxFJmzC'], ['q', hit]])
+  return async (...hit) => {
+    const query = hit.join(' ')
+    const searchParams = new URLSearchParams([['api_key', 'dc6zaTOxFJmzC'], ['q', query]])
     const { body: { data } } = await got('https://api.giphy.com/v1/gifs/search', {
       responseType: 'json',
       searchParams
@@ -22,9 +23,9 @@ function getGiphy ({ datmouth }) {
     if (data) {
       const randomIndex = utils.getRandomInt(0, data.length)
       const url = data[randomIndex].images.original.url
-      datmouth.publish(':gif#' + hit + '#' + url)
+      datmouth.publish(':gif#' + query + '#' + url)
     } else {
-      console.log('Could not grab the gif. Check your internet connection 📡')
+      console.log('Could not grab the gif right now :(')
     }
   }
 }
@@ -101,8 +102,8 @@ function help () {
       /nick yournickname    Changes your actual nickname
       /history 4            Displays last 4 messages received
       /colors               Displays color support
-      /color #B53014        Changes nickname color
-      /giphy dude           Displays a gif in the terminal
+      /color hexcolor       Changes nickname color
+      /giphy query          Displays a gif in the terminal
 
     Emacs commands:
       CTRL-U                Remove from cursor to start of line

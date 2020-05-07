@@ -39,8 +39,8 @@ Commands:
   /nick yournickname    Changes your actual nickname
   /history 4            Displays last 4 messages received
   /colors               Displays color support
-  /color #B53014        Changes nickname color
-  /giphy dude           Displays a gif in the terminal
+  /color hexcolor       Changes nickname color
+  /giphy query          Displays a gif in the terminal
 
 Emacs commands:
   CTRL-U                Remove from cursor to start of line

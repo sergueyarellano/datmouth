@@ -1,6 +1,6 @@
 # datmouth
 
-P2P chat client that uses DAT protocol underneath.
+P2P chat client that uses DAT protocol underneath. For ephemeral conversations.
 
 Have you lost your internet connection? 
 

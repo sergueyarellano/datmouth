@@ -2,7 +2,7 @@
 # Getting started
 
 
-Clone the repo and `npm install` to install node dependencies.
+Clone or fork the repo and `npm install` to install node dependencies.
 
 Now you can open a terminal and 
 

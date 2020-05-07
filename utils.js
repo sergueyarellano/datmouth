@@ -37,7 +37,8 @@ function showImage (url) {
   const image = fs.createWriteStream(path)
 
   image.on('finish', () => {
-    termImg(path, { fallback: () => console.log(`Could not display ${url}`) })
+    const imag = termImg.string(path, { width: 20 })
+    console.log(imag)
   })
   pump(got.stream(url), image)
 }

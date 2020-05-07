@@ -21,7 +21,7 @@ function getGiphy ({ datmouth }) {
     }).catch(e => ({ body: { data: null } }))
 
     if (data) {
-      const randomIndex = utils.getRandomInt(0, data.length)
+      const randomIndex = utils.getRandomInt(0, data.length - 1)
       const url = data[randomIndex].images.original.url
       datmouth.publish(':gif#' + query + '#' + url)
     } else {

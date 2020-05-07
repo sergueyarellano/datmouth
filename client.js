@@ -8,49 +8,30 @@ const templates = require('./templates')({ chalk, utils })
 module.exports = client
 
 async function client (topic, suffix = '') {
-  const datMouth = await core(topic, suffix)
+  const datmouth = await core(topic, suffix)
   const cli = entero({
     prompt: utils.composePrompt({
-      nick: datMouth.getNickname(),
-      color: datMouth.getColor(),
+      nick: datmouth.getNickname(),
+      color: datmouth.getColor(),
       chalk
     }),
-    onLine: datMouth.publish,
+    onLine: datmouth.publish,
     templates,
     commands: {
-      nick: commands.getNickname({
-        slug: utils.slug,
-        composePrompt: utils.composePrompt,
-        getColor: datMouth.getColor,
-        updateNickname: datMouth.updateNickname,
-        setPrompt: (prompt) => cli.rl.setPrompt(prompt),
-        chalk
-      }),
-      history: commands.getHistory({
-        readLast: datMouth.readLast,
-        aggregateDateLines: utils.aggregateDateLines,
-        log: (type, content) => cli.log(type, content)
-      }),
-      help: commands.getHelp(chalk),
-      colors: commands.getColors(chalk), // list color support
-      color: (color = 'magenta') => {
-        datMouth.setColor(color)
-        const newPrompt = utils.composePrompt({
-          nick: datMouth.getNickname(),
-          color: datMouth.getColor(),
-          chalk
-        })
-        cli.rl.setPrompt(newPrompt)
-      }
+      nick: commands.getNickname({ datmouth, setPrompt: (prompt) => cli.rl.setPrompt(prompt) }),
+      history: commands.getHistory({ datmouth, log: (type, content) => cli.log(type, content) }),
+      color: commands.getColor({ datmouth, setPrompt: (prompt) => cli.rl.setPrompt(prompt) }),
+      colors: commands.colors, // list color support
+      help: commands.help
     }
   })
 
   cli.rl.on('SIGINT', process.exit) // exit on <ctrl>-C
-  cli.log('welcome', { topic, timestamp: datMouth.getTimeOfLastConnection() })
+  cli.log('welcome', { topic, timestamp: datmouth.getTimeOfLastConnection() })
 
-  datMouth.listenTail((tail) => {
+  datmouth.listenTail((tail) => {
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()
-    const thresholdTime = datMouth.getTimeOfLastConnection()
+    const thresholdTime = datmouth.getTimeOfLastConnection()
 
     /*
     Show messages since the moment we connect.

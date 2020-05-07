@@ -1,13 +1,16 @@
+const utils = require('./utils')
+const chalk = require('chalk')
+
 module.exports = {
   getNickname,
   getHistory,
-  getHelp,
-  getColors
+  getColor,
+  help,
+  colors
 }
 
-function getColors (chalk) {
-  return (...options) => {
-    console.log(`
+function colors (...options) {
+  console.log(`
                   ${chalk.italic(' -- Only you can see this')}
 
     (╯°□°）╯︵ ┻━┻ 
@@ -31,22 +34,33 @@ function getColors (chalk) {
 
                   ${chalk.italic('Only you can see this --')}
     `)
+}
+
+function getColor ({ datmouth, setPrompt }) {
+  return (color = 'magenta') => {
+    datmouth.setColor(color)
+    const newPrompt = utils.composePrompt({
+      nick: datmouth.getNickname(),
+      color: datmouth.getColor(),
+      chalk
+    })
+    setPrompt(newPrompt)
   }
 }
 
-function getNickname ({ slug, updateNickname, setPrompt, composePrompt, chalk, getColor }) {
+function getNickname ({ setPrompt, datmouth }) {
   return (...options) => {
-    const newNickname = slug(options.join(' '))
+    const newNickname = utils.slug(options.join(' '))
     // nickname is preserved once user inputs a new line
-    updateNickname(newNickname)
-    setPrompt(composePrompt({ nick: newNickname, color: getColor(), chalk }))
+    datmouth.updateNickname(newNickname)
+    setPrompt(utils.composePrompt({ nick: newNickname, color: datmouth.getColor(), chalk }))
   }
 }
 
-function getHistory ({ readLast, aggregateDateLines, log }) {
+function getHistory ({ datmouth, log }) {
   return async function (size) {
-    const messages = await readLast(size)
-    const enhancedMessages = aggregateDateLines(messages)
+    const messages = await datmouth.readLast(size)
+    const enhancedMessages = datmouth.aggregateDateLines(messages)
 
     enhancedMessages.forEach(msg => {
       msg.value.type === 'chat' && log('history', msg.value)
@@ -56,8 +70,8 @@ function getHistory ({ readLast, aggregateDateLines, log }) {
   }
 }
 
-function getHelp (chalk) {
-  return () => console.log(`
+function help () {
+  console.log(`
                   ${chalk.italic(' -- Only you can see this')}
 
     ...(っ▀¯▀)つ

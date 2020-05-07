@@ -2,7 +2,7 @@ module.exports = ({ chalk, utils }) => ({
   welcome: ({ topic, timestamp }) => {
     return `⚓️ Joined ${chalk.bgMagentaBright(topic)} on ` +
     `${chalk.green(utils.getDateFromTimestamp(timestamp))} once upon a ` +
-    `${chalk.green(utils.getTimeShort(timestamp))}`
+    `${chalk.green(utils.getTimeShort(timestamp))}h`
   },
   message: ({ timestamp, nickname, text, color }) => {
     return `${chalk.blackBright(utils.getTimeShort(timestamp))} 💬 ` +

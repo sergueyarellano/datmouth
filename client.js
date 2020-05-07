@@ -3,7 +3,7 @@ const chalk = require('chalk')
 const core = require('./core')
 const utils = require('./utils')
 const commands = require('./commands')
-const templates = require('./templates')({ chalk, utils })
+const templates = require('./templates')
 
 module.exports = client
 
@@ -12,8 +12,7 @@ async function client (topic, suffix = '') {
   const cli = entero({
     prompt: utils.composePrompt({
       nick: datmouth.getNickname(),
-      color: datmouth.getColor(),
-      chalk
+      color: datmouth.getColor()
     }),
     onLine: datmouth.publish,
     templates,

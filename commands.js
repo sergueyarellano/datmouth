@@ -62,8 +62,7 @@ function getColor ({ datmouth, setPrompt }) {
     datmouth.setColor(color)
     const newPrompt = utils.composePrompt({
       nick: datmouth.getNickname(),
-      color: datmouth.getColor(),
-      chalk
+      color: datmouth.getColor()
     })
     setPrompt(newPrompt)
   }
@@ -74,7 +73,7 @@ function getNickname ({ setPrompt, datmouth }) {
     const newNickname = utils.slug(options.join(' '))
     // nickname is preserved once user inputs a new line
     datmouth.updateNickname(newNickname)
-    setPrompt(utils.composePrompt({ nick: newNickname, color: datmouth.getColor(), chalk }))
+    setPrompt(utils.composePrompt({ nick: newNickname, color: datmouth.getColor() }))
   }
 }
 

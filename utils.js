@@ -4,6 +4,7 @@ const termImg = require('term-img')
 const tempy = require('tempy')
 const pump = require('pump')
 const got = require('got')
+const chalk = require('chalk')
 
 module.exports = {
   aggregateDateLines,
@@ -20,11 +21,11 @@ module.exports = {
   showImage
 }
 
-function composePrompt ({ nick, color, chalk }) {
-  return `@${getProperColorModel(chalk, color)(nick)}> `
+function composePrompt ({ nick, color }) {
+  return `@${getProperColorModel(color)(nick)}> `
 }
 
-function getProperColorModel (chalk, color) {
+function getProperColorModel (color) {
   return color.startsWith('#') ? chalk.hex(color) : (typeof chalk[color] === 'function' ? chalk[color] : chalk.magenta)
 }
 

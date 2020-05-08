@@ -5,6 +5,7 @@ const tempy = require('tempy')
 const pump = require('pump')
 const got = require('got')
 const chalk = require('chalk')
+const publicIP = require('public-ip')
 
 module.exports = {
   aggregateDateLines,
@@ -18,7 +19,18 @@ module.exports = {
   getProperColorModel,
   composePrompt,
   getRandomInt,
-  showImage
+  showImage,
+  getIPV4FromIPV6,
+  getPublicIP
+}
+
+function getPublicIP () {
+  return publicIP.v4()
+}
+
+function getIPV4FromIPV6 (ipv6) {
+  const ip = ipv6.match(/.*:(.*)/)
+  return ip ? ipv6.match(/.*:(.*)/)[1] : ipv6
 }
 
 function composePrompt ({ nick, color }) {

@@ -1,5 +1,4 @@
 const entero = require('entero')
-const chalk = require('chalk')
 const core = require('./core')
 const utils = require('./utils')
 const commands = require('./commands')
@@ -22,7 +21,17 @@ async function client (topic, suffix = '') {
       color: commands.getColor({ datmouth, setPrompt: (prompt) => cli.rl.setPrompt(prompt) }),
       colors: commands.colors, // list color support
       help: commands.help,
-      giphy: commands.getGiphy({ datmouth })
+      giphy: commands.getGiphy({ datmouth }),
+      connected: () => {
+        const peers = datmouth.getActiveConnections()
+        if (!peers.length) console.log('No peers are connected')
+        else {
+          console.log('\nPeers connected:')
+          peers.forEach(peer => {
+            console.log(`${peer.host}:${peer.port} ${peer.local ? 'LAN' : 'WAN'} - ${peer.nickname}`)
+          })
+        }
+      }
     }
   })
 
@@ -38,6 +47,9 @@ async function client (topic, suffix = '') {
     With every new connection we won't show the messages that others could have produced while offline.
   */
     if (thresholdTime < msgTimestampMS) {
+      // grab peer info with nickname
+      datmouth.setPeerMap(Object.assign({}, tail.value.address, { nickname: tail.value.nickname }))
+      //
       if (text.startsWith(':gif#')) {
         const url = text.match(/http.*/)[0]
         const hit = text.match(/#.+#/)[0]

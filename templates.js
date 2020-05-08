@@ -8,14 +8,14 @@ module.exports = {
     `${chalk.green(utils.getTimeShort(timestamp))}h`
   },
   message: ({ timestamp, nickname, text, color }) => {
-    return `${colorTimeStamp(timestamp)} 💬 ` +
+    return `${colorTimeStamp(timestamp)} ` +
     `${colorNickname(color, nickname)}${chalk.green.bold(':')} ${text}`
   },
   history: ({ timestamp, nickname, text, color = 'green' }) => {
-    return `${colorTimeStamp(timestamp)} 💬 ` +
+    return `${colorTimeStamp(timestamp)} ` +
     `${colorNickname(color, nickname)}: ${colorMessage(text)}`
   },
-  daychange: ({ text }) => `${text} messages:`,
+  daychange: ({ text }) => `\n${text} messages:`,
   shades: () => '\n(っ▀¯▀)つ'
 }
 

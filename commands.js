@@ -103,6 +103,7 @@ function help () {
       /colors               Displays color support
       /color hexcolor       Changes nickname color
       /giphy query          Displays a gif in the terminal
+      /connected            Shows peers connected to you
 
     Emacs commands:
       CTRL-U                Remove from cursor to start of line
@@ -110,6 +111,8 @@ function help () {
       CTRL-E                Go to end of the line
       ALT-B                 Move cursor backwards, word by word
       ALT-F                 Move cursor forward, word by word
+
+      To exit the app press <ctrl>-C or throw the computer out the window
 
                   ${chalk.italic('Only you can see this --')}
     `)

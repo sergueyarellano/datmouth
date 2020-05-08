@@ -35,19 +35,20 @@ Will join the swarm automatically. You can share the topic with a friend and sta
 
 ```
 Commands:
-  /help                 Displays this message
-  /nick yournickname    Changes your actual nickname
-  /history 4            Displays last 4 messages received
-  /colors               Displays color support
-  /color hexcolor       Changes nickname color
-  /giphy query          Displays a gif in the terminal
+- /help                 Displays this message
+- /nick yournickname    Changes your actual nickname
+- /history 4            Displays last 4 messages received
+- /colors               Displays color support
+- /color hexcolor       Changes nickname color
+- /giphy query          Displays a gif in the terminal
+- /connected            Shows peers connected to you
 
 Emacs commands:
-  CTRL-U                Remove from cursor to start of line
-  CTRL-A                Go to start of the line
-  CTRL-E                Go to end of the line
-  ALT-B                 Move cursor backwards, word by word
-  ALT-F                 Move cursor forward, word by word
+- CTRL-U                Remove from cursor to start of line
+- CTRL-A                Go to start of the line
+- CTRL-E                Go to end of the line
+- ALT-B                 Move cursor backwards, word by word
+- ALT-F                 Move cursor forward, word by word
 ```
 
 # Want to contribute?

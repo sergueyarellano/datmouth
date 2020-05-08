@@ -24,7 +24,7 @@ async function client (topic, suffix = '') {
       giphy: commands.getGiphy({ datmouth }),
       connected: () => {
         const peers = datmouth.getActiveConnections()
-        if (!peers.length) console.log('No peers are connected')
+        if (!peers.length) console.log('\nNo peers... 🤔')
         else {
           console.log('\nPeers connected:')
           peers.forEach(peer => {

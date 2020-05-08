@@ -32,6 +32,7 @@ function swarm (core, topic, updateTimeOfLastConnection) {
       - host
       - local
       */
+      console.log('📡 new peer')
       peers = peers.concat(details.peer)
     } else {
       // Update user address info
@@ -46,6 +47,7 @@ function swarm (core, topic, updateTimeOfLastConnection) {
   swarm.on('disconnection', function (socket, details) {
     // TODO: refactor
     if (details.peer) {
+      console.log('🥊 peer dropped')
       peers = peers.filter(peer => {
         if (details.peer.local) {
           return peer.port !== details.peer.port

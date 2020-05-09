@@ -42,6 +42,7 @@ Commands:
 - /color hexcolor       Changes nickname color
 - /giphy query          Displays a gif in the terminal
 - /connected            Shows number of peers connected
+- /exit                 Close the app
 
 Emacs commands:
 - CTRL-U                Remove from cursor to start of line

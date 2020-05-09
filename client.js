@@ -22,7 +22,8 @@ async function client (topic, suffix = '') {
       colors: commands.colors, // list color support
       help: commands.help,
       giphy: commands.getGiphy({ datmouth }),
-      connected: () => cli.log('connected', datmouth.getActiveConnections())
+      connected: () => cli.log('connected', datmouth.getActiveConnections()),
+      exit: () => console.log('See ya! ;)') || process.exit(0)
     }
   })
 

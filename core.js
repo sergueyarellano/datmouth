@@ -35,7 +35,7 @@ async function createDATMouth (topicName, suffix = '') {
   const network = swarm(kappa, topic, updateTimeOfLastConnection)
 
   return {
-    publish: (message) => publish({ message, feed: feed(), nickname, color, address: network.getUser() }),
+    publish: (message) => publish({ message, feed: feed(), nickname, color }),
     updateNickname: (newNickname) => { nickname = newNickname },
     getNickname: () => nickname,
     readLast: (size) => readLast(size, kappa),

@@ -5,15 +5,14 @@ P2P chat client that uses DAT protocol underneath. For ephemeral conversations.
 Have you lost your internet connection? 
 
 Works with peers connected:
-- offline
-- LAN
+- offline, LAN
 - WAN
 
 Inspired by [DAT](https://dat.foundation/) foundation workshops and great packages in the community.
 
-datmouth does not work under **node 14** yet.
+> datmouth does not work under **node 14** yet. Tested with **node 13** :)
 
-hypercore, multifeed and all the dat related deck is being updated while you see this message. Hang on!
+To experiment with kappa architectures check out [kappa-core](https://www.npmjs.com/package/kappa-core) deck, [hyperswarm](https://www.npmjs.com/package/hyperswarm), etc. Thanks to those folks implicated, having too much fun with this :)
 
 # Install
 
@@ -29,7 +28,17 @@ $ datmouth topicname
 
 Will join the swarm automatically. You can share the topic with a friend and start chatting
 
+> Your conversations and gifs are saved to a temp directory. Your system will remove them automatically at some point
+
 ![](datmouth.gif)
+
+# Update the client
+
+If you already have a `datmouth` client and want to update the version:
+
+```
+npm -g update datmouth
+```
 
 # Already joined a topic?
 
@@ -39,8 +48,8 @@ Commands:
 - /nick yournickname    Changes your actual nickname
 - /history 4            Displays last 4 messages received
 - /colors               Displays color support
-- /color hexcolor       Changes nickname color
-- /giphy query          Displays a gif in the terminal
+- /color #EA8A25        Changes nickname color
+- /giphy boom           Displays a "boom" gif in the terminal (iterm2, node>v10)
 - /connected            Shows number of peers connected
 - /exit                 Close the app
 
@@ -54,6 +63,6 @@ Emacs commands:
 
 # Want to contribute?
 
-Fork the repo and `npm install` to install node dependencies.
+Love to work with P2P enthusiasts. Fork the repo and `npm install` to install node dependencies.
 
 to create instances, just do `node cli test-topic`

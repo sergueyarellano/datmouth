@@ -6,8 +6,8 @@ const templates = require('./templates')
 
 module.exports = client
 
-async function client (topic, suffix = '') {
-  const datmouth = await core(topic, suffix)
+async function client (topic) {
+  const datmouth = await core(topic)
   const cli = entero({
     prompt: utils.composePrompt({
       nick: datmouth.getNickname(),

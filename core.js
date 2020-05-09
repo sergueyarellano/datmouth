@@ -1,17 +1,15 @@
 const kappacore = require('kappa-core')
 const memdb = require('memdb')
-const path = require('path')
+const tempy = require('tempy')
 const views = require('./views')
 const swarm = require('./swarm')
 const { createNickname, assignColor, getTimestamp, slug } = require('./utils')
 
 module.exports = createDATMouth
 
-async function createDATMouth (topicName, suffix = '') {
-  // for local testing suffix help us in differentiating between client instances,
-  // we can pass a 1, 2, 3 etc
+async function createDATMouth (topicName) {
   const topic = slug(topicName)
-  const databasePath = path.resolve(__dirname, `./hc-${topic}${suffix}`)
+  const databasePath = tempy.directory()
   const kappa = kappacore(databasePath, { valueEncoding: 'json' })
 
   /* VIEWS */

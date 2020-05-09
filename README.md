@@ -54,4 +54,6 @@ Emacs commands:
 
 # Want to contribute?
 
-[Here](docs/devs.md) is how to get started
+Fork the repo and `npm install` to install node dependencies.
+
+to create instances, just do `node cli test-topic`

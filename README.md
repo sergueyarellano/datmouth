@@ -41,7 +41,7 @@ Commands:
 - /colors               Displays color support
 - /color hexcolor       Changes nickname color
 - /giphy query          Displays a gif in the terminal
-- /connected            Shows peers connected to you
+- /connected            Shows number of peers connected
 
 Emacs commands:
 - CTRL-U                Remove from cursor to start of line

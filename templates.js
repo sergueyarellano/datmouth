@@ -16,6 +16,7 @@ module.exports = {
     `${colorNickname(color, nickname)}: ${colorMessage(text)}`
   },
   daychange: ({ text }) => `\n${text} messages:`,
+  connected: (connections) => `📡  ${chalk.blueBright(connections)} peer(s)`,
   shades: () => '\n(っ▀¯▀)つ'
 }
 

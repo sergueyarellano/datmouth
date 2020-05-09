@@ -22,16 +22,7 @@ async function client (topic, suffix = '') {
       colors: commands.colors, // list color support
       help: commands.help,
       giphy: commands.getGiphy({ datmouth }),
-      connected: () => {
-        const peers = datmouth.getActiveConnections()
-        if (!peers.length) console.log('\nNo peers... 🤔')
-        else {
-          console.log('\nPeers connected:')
-          peers.forEach(peer => {
-            console.log(`${peer.host}:${peer.port} ${peer.local ? 'LAN' : 'WAN'} - ${peer.nickname}`)
-          })
-        }
-      }
+      connected: () => cli.log('connected', datmouth.getActiveConnections())
     }
   })
 
@@ -47,9 +38,6 @@ async function client (topic, suffix = '') {
     With every new connection we won't show the messages that others could have produced while offline.
   */
     if (thresholdTime < msgTimestampMS) {
-      // grab peer info with nickname
-      datmouth.setPeerMap(Object.assign({}, tail.value.address, { nickname: tail.value.nickname }))
-      //
       if (text.startsWith(':gif#')) {
         const url = text.match(/http.*/)[0]
         const hit = text.match(/#.+#/)[0]

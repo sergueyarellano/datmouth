@@ -1,6 +1,6 @@
 {
   "name": "datmouth",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "p2p chat with DAT protocol",
   "bin": "cli.js",
   "scripts": {

@@ -49,7 +49,7 @@ Commands:
 - /history 4            Displays last 4 messages received
 - /colors               Displays color support
 - /color #EA8A25        Changes nickname color
-- /giphy boom           Displays a "boom" gif in the terminal (iterm2, node>v10)
+- /giphy boom           Displays a "boom" gif in the terminal (iterm2, node>=v10.19)
 - /connected            Shows number of peers connected
 - /exit                 Close the app
 

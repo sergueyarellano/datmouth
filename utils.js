@@ -39,7 +39,8 @@ function showImage (url) {
 
   image.on('finish', () => {
     const imag = termImg.string(path, { width: 20 })
-    console.log(imag)
+    console.log('')
+    process.stdout.write(imag)
   })
   pump(got.stream(url), image)
 }

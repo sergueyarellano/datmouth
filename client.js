@@ -34,6 +34,10 @@ async function client (topic) {
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()
     const thresholdTime = datmouth.getTimeOfLastConnection()
     const text = tail.value.text
+
+    // Register nickname for completion
+    cli.setCompletion('@' + tail.value.nickname)
+
     /*
     Show messages since the moment we connect.
     With every new connection we won't show the messages that others could have produced while offline.

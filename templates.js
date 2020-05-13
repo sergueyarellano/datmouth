@@ -9,7 +9,7 @@ module.exports = {
   },
   message: ({ timestamp, nickname, text, color }) => {
     return `${colorTimeStamp(timestamp)} ` +
-    `${colorNickname(color, nickname)}${chalk.green.bold(':')} ${text}`
+    `${colorNickname(color, nickname)}${chalk.green.bold(':')} ${highlight(text)}`
   },
   history: ({ timestamp, nickname, text, color = 'green' }) => {
     return `${colorTimeStamp(timestamp)} ` +
@@ -22,6 +22,10 @@ module.exports = {
 
 function colorNickname (color, nickname) {
   return utils.getProperColorModel(color)(nickname)
+}
+
+function highlight (text) {
+  return text.replace(/@[^\s]+/g, chalk.bgBlackBright.bold('$&'))
 }
 
 function colorTimeStamp (timestamp) {

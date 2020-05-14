@@ -31,7 +31,7 @@ function getGiphy ({ datmouth }) {
 }
 
 function colors (...options) {
-  process.stdout.write(`
+  console.log(`
                   ${chalk.italic(' -- Only you can see this')}
 
     (╯°□°）╯︵ ┻━┻ 
@@ -55,7 +55,6 @@ function colors (...options) {
 
                   ${chalk.italic('Only you can see this --')}
     `)
-  console.log('')
 }
 
 function getColor ({ datmouth, setPrompt }) {
@@ -92,7 +91,7 @@ function getHistory ({ datmouth, log }) {
 }
 
 function help () {
-  process.stdout.write(`
+  console.log(`
                   ${chalk.italic(' -- Only you can see this')}
 
     ...(っ▀¯▀)つ
@@ -116,5 +115,4 @@ function help () {
 
                   ${chalk.italic('Only you can see this --')}
     `)
-  console.log('')
 }

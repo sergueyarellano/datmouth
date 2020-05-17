@@ -7,7 +7,7 @@ module.exports = {
     `${chalk.green(utils.getDateFromTimestamp(timestamp))} once upon a ` +
     `${chalk.green(utils.getTimeShort(timestamp))}h`
   },
-  message: ({ timestamp, nickname, text, color }) => {
+  message: ({ timestamp, nickname, text, color = 'green' }) => {
     return `${colorTimeStamp(timestamp)} ` +
     `${colorNickname(color, nickname)}${chalk.green.bold(':')} ${highlight(text)}`
   },

@@ -18,3 +18,14 @@ test('slug() trims spaces, replaces spaces with dashes and lowercase', function 
 
   t.deepEqual(actual, expected)
 })
+
+test('getTimeShort should shorten the timestamp', function (t) {
+  t.plan(2)
+  // Will return shortened time with GMT offset
+  const actual = utils.getTimeShort('2020-05-17T16:45:15.551Z')
+  const re = /^\d{2}:\d{2}/
+  const expectedMinutes = '45'
+
+  t.deepEqual(re.test(actual), true)
+  t.deepEqual(actual.slice(3), expectedMinutes)
+})

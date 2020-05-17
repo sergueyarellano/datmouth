@@ -1,20 +1,22 @@
 const kappacore = require('kappa-core')
 const memdb = require('memdb')
 const tempy = require('tempy')
+const list = require('kappa-view-list')
 const views = require('./views')
+
 const swarm = require('./swarm')
 const { createNickname, assignColor, getTimestamp, slug } = require('./utils')
 
 module.exports = createDATMouth
 
-async function createDATMouth (topicName) {
+async function createDATMouth (topicName, ram) {
   const topic = slug(topicName)
-  const databasePath = tempy.directory()
+  const databasePath = ram || tempy.directory()
   const kappa = kappacore(databasePath, { valueEncoding: 'json' })
 
   /* VIEWS */
   const db = memdb()
-  kappa.use('chat', views.createMessagesView(db))
+  kappa.use('chat', list(db, views.filterMessageView))
 
   /* CREATE LOCAL WRITER */
   const feed = await getFeed(kappa)
@@ -41,7 +43,8 @@ async function createDATMouth (topicName) {
     getTimeOfLastConnection: () => timeOfLastConnection,
     setColor: (code) => { color = code },
     getColor: () => color,
-    getActiveConnections: () => { return network.connections.size / 2 }
+    getActiveConnections: () => { return network.connections.size / 2 },
+    disconnect: () => network.destroy()
   }
 }
 
@@ -68,18 +71,18 @@ function tail (kappa, fn) {
   kappa.api.chat.tail(1, (data) => fn(data[0]))
 }
 
-function publish ({ message, feed, nickname, color, address }) {
+function publish ({ message, feed, nickname, color }) {
+  const formattedMsg = {
+    type: 'chat',
+    nickname,
+    text: message,
+    color,
+    timestamp: getTimestamp()
+  }
   return new Promise((resolve, reject) => {
-    feed.append({
-      type: 'chat',
-      nickname,
-      text: message,
-      address,
-      color,
-      timestamp: getTimestamp()
-    }, function (err) {
+    feed.append(formattedMsg, function (err) {
       if (err) reject(err)
-      resolve(message)
+      resolve(formattedMsg)
     })
   })
 }

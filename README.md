@@ -10,7 +10,7 @@ Works with peers connected:
 
 Inspired by [DAT](https://dat.foundation/) foundation workshops and great packages in the community.
 
-> datmouth does not work with **node 14** yet. Tested with **node 13** :)
+> datmouth works with **node < v14** :)
 
 To experiment with kappa architectures check out [kappa-core](https://www.npmjs.com/package/kappa-core) deck, [hyperswarm](https://www.npmjs.com/package/hyperswarm), etc. Thanks to those folks implicated, having too much fun with this :)
 

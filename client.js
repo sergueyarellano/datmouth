@@ -3,6 +3,7 @@ const core = require('./core')
 const utils = require('./utils')
 const commands = require('./commands')
 const templates = require('./templates')
+const version = require('./package.json').version
 
 module.exports = client
 
@@ -28,7 +29,7 @@ async function client (topic) {
   })
 
   cli.rl.on('SIGINT', process.exit) // exit on <ctrl>-C
-  cli.log('welcome', { topic, timestamp: datmouth.getTimeOfLastConnection() })
+  cli.log('welcome', { topic, timestamp: datmouth.getTimeOfLastConnection(), version })
 
   datmouth.listenTail((tail) => {
     const msgTimestampMS = new Date(tail.value.timestamp).getTime()

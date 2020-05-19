@@ -2,10 +2,10 @@ const chalk = require('chalk')
 const utils = require('./utils')
 
 module.exports = {
-  welcome: ({ topic, timestamp }) => {
+  welcome: ({ topic, timestamp, version }) => {
     return `⚓️ Joined ${chalk.bgMagenta(topic)} on ` +
     `${chalk.green(utils.getDateFromTimestamp(timestamp))} once upon a ` +
-    `${chalk.green(utils.getTimeShort(timestamp))}h\n`
+    `${chalk.green(utils.getTimeShort(timestamp))}h - datmouth v${version}\n`
   },
   message: ({ timestamp, nickname, text, color = 'green' }) => {
     return `${colorTimeStamp(timestamp)} ` +

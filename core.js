@@ -43,7 +43,7 @@ async function createDATMouth (topicName, ram) {
     getTimeOfLastConnection: () => timeOfLastConnection,
     setColor: (code) => { color = code },
     getColor: () => color,
-    getActiveConnections: () => { return network.connections.size / 2 },
+    getActiveConnections: () => { return network.connections.size },
     disconnect: () => network.destroy()
   }
 }

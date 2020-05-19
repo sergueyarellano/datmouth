@@ -27,6 +27,6 @@ test('daychange template', function (t) {
 test('connected template', function (t) {
   t.plan(1)
   const actual = templates.connected(3)
-  const expected = '📡  3 peer(s)'
+  const expected = '📡  3 active connections'
   t.deepEqual(actual, expected)
 })

@@ -19,9 +19,7 @@ function swarm (core, topic, updateTimeOfLastConnection) {
     // We update time of last connection to avoid showing old/offline messages
     // The client will take this as a threshold to display or not new replicated messages
     updateTimeOfLastConnection(Date.now())
-    pump(socket, core.replicate(details.client, { live: true }), socket, function (err) {
-      console.log('An error happened when trying to replicate the hypercore:', err)
-    })
+    pump(socket, core.replicate(details.client, { live: true }), socket)
   })
 
   swarm.on('disconnection', function (socket, details) {

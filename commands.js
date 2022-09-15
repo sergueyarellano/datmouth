@@ -14,7 +14,7 @@ module.exports = {
 function getGiphy ({ datmouth }) {
   return async (...hit) => {
     const query = hit.join(' ')
-    const searchParams = new URLSearchParams([['api_key', 'dc6zaTOxFJmzC'], ['q', query]])
+    const searchParams = new URLSearchParams([['api_key', '6laGrwaiRKKHYKQFHc18UVAFZ6iFHt8p'], ['q', query]])
     const { body: { data } } = await got('https://api.giphy.com/v1/gifs/search', {
       responseType: 'json',
       searchParams

@@ -1,4 +1,4 @@
-const network = require('hyperswarm')
+const Hyperswarm = require('hyperswarm')
 const crypto = require('crypto')
 const pump = require('pump')
 const chalk = require('chalk')
@@ -6,13 +6,10 @@ const chalk = require('chalk')
 module.exports = swarm
 
 function swarm (core, topic, updateTimeOfLastConnection) {
-  const swarm = network()
+  const swarm = new Hyperswarm()
   const topicDiscoveryKey = crypto.createHash('sha256').update(topic).digest()
 
-  swarm.join(topicDiscoveryKey, {
-    lookup: true, // find and connect to peers.
-    announce: true // optional: announce self as a connection target.
-  })
+  swarm.join(topicDiscoveryKey)
 
   swarm.on('connection', async function (socket, details) {
     details.peer && console.log(`📡 ${chalk.green('+1')} peer`, details.peer.local ? '(LAN)' : '(WAN)')

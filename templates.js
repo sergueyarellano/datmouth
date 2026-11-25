@@ -1,7 +1,9 @@
-const chalk = require('chalk')
-const utils = require('./utils')
+import chalk from 'chalk'
+import * as utils from './utils.js'
 
-module.exports = {
+export const ASCII_RE = /^:ascii#([^\s#]+)$/
+
+export default {
   welcome: ({ topic, timestamp, version }) => {
     return `⚓️ Joined ${chalk.bgMagenta(topic)} on ` +
     `${chalk.green(utils.getDateFromTimestamp(timestamp))} once upon a ` +
@@ -17,6 +19,7 @@ module.exports = {
   },
   daychange: ({ text }) => `\n${text} messages:`,
   connected: (connections) => `📡  ${chalk.blueBright(connections)} active connections`,
+  peer: ({ added, local }) => `📡 ${added ? chalk.green('+1') : chalk.red('-1')} peer ${local ? '(LAN)' : '(WAN)'}`,
   shades: () => '\n(っ▀¯▀)つ'
 }
 
@@ -33,7 +36,7 @@ function colorTimeStamp (timestamp) {
 }
 
 function colorMessage (text) {
-  const gifLine = text.match('^(:gif#.+#)(.+)$')
-  if (gifLine) return `${chalk.redBright(gifLine[1])} ${chalk.yellow(gifLine[2])}`
+  const ascii = text.match(ASCII_RE)
+  if (ascii) return chalk.redBright(`*${ascii[1]}*`)
   return chalk.yellow(text)
 }

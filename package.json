@@ -1,49 +1,58 @@
 {
   "name": "datmouth",
-  "version": "1.11.4",
-  "description": "p2p chat with DAT protocol",
-  "bin": "cli.js",
+  "version": "2.0.0",
+  "description": "p2p chat on the Holepunch stack (successor of the DAT protocol)",
+  "type": "module",
+  "main": "client.js",
+  "bin": {
+    "datmouth": "cli.js"
+  },
+  "files": [
+    "*.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "test": "tape test/**/*.js | tap-nirvana",
-    "watch:test": "nodemon --exec \"npm run test\""
-  },
-  "dependencies": {
-    "chalk": "^4.0.0",
-    "cuid": "^2.1.8",
-    "entero": "^1.3.3",
-    "got": "^11.1.3",
-    "hyperswarm": "^4.3.0",
-    "kappa-core": "^7.0.0",
-    "kappa-view-list": "^1.2.0",
-    "memdb": "^1.3.1",
-    "minimist": "^1.2.5",
-    "pump": "^3.0.0",
-    "tempy": "^0.5.0",
-    "term-img": "^4.1.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.3",
-    "random-access-memory": "^3.1.1",
-    "standard": "^14.3.4",
-    "tap-nirvana": "^1.1.0",
-    "tape": "^5.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sergueyarellano/datmouth.git"
+    "start": "node cli.js",
+    "test": "node --test \"test/*.test.js\"",
+    "watch:test": "node --test --watch \"test/*.test.js\""
   },
   "keywords": [
     "chat",
     "p2p",
     "dat",
+    "holepunch",
     "terminal",
     "hypercore",
+    "corestore",
+    "hyperswarm",
     "swarm",
-    "kappa"
+    "ascii"
   ],
   "license": "ISC",
+  "dependencies": {
+    "b4a": "^1.9.0",
+    "chalk": "^6.0.1",
+    "compact-encoding": "^3.7.1",
+    "corestore": "^7.16.1",
+    "hyperswarm": "^4.17.2",
+    "minimist": "^1.2.8",
+    "protomux": "^3.13.1"
+  },
+  "devDependencies": {
+    "hyperdht": "^6.37.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergueyarellano/datmouth.git"
+  },
   "bugs": {
     "url": "https://github.com/sergueyarellano/datmouth/issues"
   },
-  "homepage": "https://github.com/sergueyarellano/datmouth#readme"
+  "homepage": "https://github.com/sergueyarellano/datmouth#readme",
+  "overrides": {
+    "bogon": "^1.3.0"
+  }
 }

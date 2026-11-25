@@ -1,92 +1,101 @@
-const test = require('tape')
-const core = require('../core')
-const ram = require('random-access-memory')
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import createTestnet from 'hyperdht/testnet.js'
+import DHT from 'hyperdht'
+import createDATMouth from '../core.js'
+import { tmpPeer, tmpDir, connect, waitFor, sleep } from './helpers.js'
 
-/*
-  Kind of testing third parties here (kappa core, kappa view list),
-  but I wanted to have something to test from consumer perspective of this core
-*/
+test('publish appends a message to the feed', async (t) => {
+  const datmouth = await tmpPeer('test')
+  t.after(() => datmouth.disconnect())
+  const published = await datmouth.publish('example message')
 
-test('publish appends a message to the feed', async function (t) {
-  t.plan(4)
-  const datmouth = await core('test', ram)
-  datmouth.disconnect()
-  const msg = 'example message'
-  const published = await datmouth.publish(msg)
-  {
-    const actual = Object.keys(published)
-    const expected = ['type', 'nickname', 'text', 'color', 'timestamp']
-    t.deepEqual(actual, expected)
-  }
-
-  {
-    const actual = published.text
-    const expected = msg
-    t.deepEqual(actual, expected)
-  }
-  {
-    const actual = published.type
-    const expected = 'chat'
-    t.deepEqual(actual, expected)
-  }
-  {
-    const re = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
-    const actual = re.test(published.timestamp)
-    const expected = true
-    t.deepEqual(actual, expected)
-  }
+  assert.deepEqual(Object.keys(published), ['type', 'nickname', 'text', 'color', 'timestamp'])
+  assert.equal(published.text, 'example message')
+  assert.equal(published.type, 'chat')
+  assert.match(published.timestamp, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
 })
 
-test('readLast', async t => {
-  t.plan(6)
-  const datmouth = await core('test2', ram)
-  datmouth.disconnect()
-  const msg = 'first message'
-  const msg2 = 'second message'
-  const msg3 = 'third message'
-  await datmouth.publish(msg)
-  await sleep(200) // otherwise I noticed race conditions can occur on append to hypercore
-  await datmouth.publish(msg2)
-  await sleep(200)
-  await datmouth.publish(msg3)
+test('readLast', async (t) => {
+  const datmouth = await tmpPeer('test2')
+  t.after(() => datmouth.disconnect())
+  const msgs = ['first message', 'second message', 'third message']
+  for (const m of msgs) {
+    await datmouth.publish(m)
+    await sleep(5)
+  }
 
-  {
-    const actual = await datmouth.readLast(1)
-    const expected = msg3
-    t.deepEqual(actual[0].value.text, expected, 'should read last message')
-  }
-  {
-    const entries = await datmouth.readLast(2)
-    const expected = [msg2, msg3]
-    entries.forEach((entry, index) => {
-      t.deepEqual(entry.value.text, expected[index], 'should read last 2 messages')
-    })
-  }
-  {
-    const entries = await datmouth.readLast()
-    const expected = [msg, msg2, msg3]
-    entries.forEach((entry, index) => {
-      t.deepEqual(entry.value.text, expected[index], 'should read all messages')
-    })
-  }
+  const texts = (entries) => entries.map(e => e.value.text)
+  assert.deepEqual(texts(await datmouth.readLast(1)), [msgs[2]], 'should read last message')
+  assert.deepEqual(texts(await datmouth.readLast(2)), msgs.slice(1), 'should read last 2 messages')
+  assert.deepEqual(texts(await datmouth.readLast()), msgs, 'should read all messages')
 })
 
-test('listenTail', async t => {
-  t.plan(1)
-  const msg = 'a simple message'
-  const datmouth = await core('test3', ram)
-  datmouth.disconnect()
-  datmouth.listenTail(cb)
-  await sleep(500)
-  await datmouth.publish(msg)
-  await sleep(1000)
-  function cb (tail) {
-    t.deepEqual(tail.value.text, msg, 'should receive last message published')
-  }
+test('listenTail receives own messages', async (t) => {
+  const datmouth = await tmpPeer('test3')
+  t.after(() => datmouth.disconnect())
+  const received = waitFor(datmouth, () => true)
+  await datmouth.publish('a simple message')
+  assert.equal((await received).value.text, 'a simple message')
 })
 
-function sleep (ms) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, ms)
+test('updateNickname is used for new messages', async (t) => {
+  const datmouth = await tmpPeer('test4')
+  t.after(() => datmouth.disconnect())
+  datmouth.updateNickname('dude')
+  const msg = await datmouth.publish('hi')
+  assert.equal(msg.nickname, 'dude')
+})
+
+test('two peers replicate each other\'s messages', async (t) => {
+  const a = await tmpPeer('room')
+  const b = await tmpPeer('room')
+  t.after(async () => { close(); await a.disconnect(); await b.disconnect() })
+
+  await a.publish('written before connecting')
+  const close = connect(a, b)
+
+  const backlog = await waitFor(b, tail => tail.value.text === 'written before connecting')
+  assert.equal(backlog.value.text, 'written before connecting')
+
+  const live = waitFor(a, tail => tail.value.text === 'hello from b')
+  await b.publish('hello from b')
+  assert.equal((await live).value.text, 'hello from b')
+
+  const history = (await b.readLast()).map(e => e.value.text)
+  assert.deepEqual(history, ['written before connecting', 'hello from b'])
+})
+
+test('writer keys are gossiped through a shared peer', async (t) => {
+  const [a, b, c] = await Promise.all([tmpPeer('mesh'), tmpPeer('mesh'), tmpPeer('mesh')])
+  const closeAB = connect(a, b)
+  const closeBC = connect(b, c)
+  t.after(async () => {
+    closeAB(); closeBC()
+    await Promise.all([a.disconnect(), b.disconnect(), c.disconnect()])
   })
-}
+
+  const got = waitFor(c, tail => tail.value.text === 'from a')
+  await a.publish('from a')
+  assert.equal((await got).value.text, 'from a')
+})
+
+test('two peers find each other over hyperswarm and chat', async (t) => {
+  const testnet = await createTestnet(3)
+  const topic = 'swarm-' + process.pid
+  const dhts = [0, 1].map(() => new DHT({ bootstrap: testnet.bootstrap, host: '127.0.0.1' }))
+  const a = await createDATMouth(topic, { storage: tmpDir(), swarmOpts: { dht: dhts[0] } })
+  const b = await createDATMouth(topic, { storage: tmpDir(), swarmOpts: { dht: dhts[1] } })
+  t.after(async () => {
+    await a.disconnect(); await b.disconnect()
+    await Promise.all(dhts.map(d => d.destroy()))
+    await testnet.destroy()
+  })
+
+  const connected = new Promise(resolve => a.onPeer(change => change === 'add' && resolve()))
+  await connected
+  const got = waitFor(a, tail => tail.value.text === 'over the swarm')
+  await b.publish('over the swarm')
+  assert.equal((await got).value.text, 'over the swarm')
+  assert.equal(a.getActiveConnections(), 1)
+})

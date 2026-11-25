@@ -1,40 +1,22 @@
-const chalk = require('chalk')
-const got = require('got')
-const utils = require('./utils')
+import chalk from 'chalk'
+import * as utils from './utils.js'
+import { findArt, listArt } from './art.js'
 
-module.exports = {
-  getNickname,
-  getHistory,
-  getColor,
-  getGiphy,
-  help,
-  colors
-}
-
-function getGiphy ({ datmouth }) {
-  return async (...hit) => {
-    const query = hit.join(' ')
-    const searchParams = new URLSearchParams([['api_key', '6laGrwaiRKKHYKQFHc18UVAFZ6iFHt8p'], ['q', query]])
-    const { body: { data } } = await got('https://api.giphy.com/v1/gifs/search', {
-      responseType: 'json',
-      searchParams
-    }).catch(e => ({ body: { data: null } }))
-
-    if (data) {
-      const randomIndex = utils.getRandomInt(0, data.length - 1)
-      const url = data[randomIndex].images.original.url
-      datmouth.publish(':gif#' + query + '#' + url)
-    } else {
-      console.log('Could not grab the gif right now :(')
-    }
+export function getAscii ({ datmouth, print }) {
+  return async (...words) => {
+    const art = findArt(words.join(' '))
+    if (art) return datmouth.publish(':ascii#' + art.names[0])
+    const query = words.join(' ')
+    print((query ? `No ASCII reaction called "${query}". ` : '') +
+      'Try one of: ' + listArt().join(', ') + ', random')
   }
 }
 
-function colors (...options) {
-  console.log(`
+export function colors ({ print }) {
+  return () => print(`
                   ${chalk.italic(' -- Only you can see this')}
 
-    (╯°□°）╯︵ ┻━┻ 
+    (╯°□°）╯︵ ┻━┻
 
     1 Basic color support (16 colors):
       try:
@@ -44,7 +26,7 @@ function colors (...options) {
 
     2 256 color support and Truecolor support (16 million colors)
       try:
-      /color ##DEADED
+      /color #DEADED
 
       #C4462D red     #EA8A25 orange  #F4F008 yellow
       #77F408 green   #08B7F4 blue    #F008F4 pink
@@ -57,27 +39,24 @@ function colors (...options) {
     `)
 }
 
-function getColor ({ datmouth, setPrompt }) {
+export function getColor ({ datmouth, setPrompt }) {
   return (color = 'magenta') => {
     datmouth.setColor(color)
-    const newPrompt = utils.composePrompt({
-      nick: datmouth.getNickname(),
-      color: datmouth.getColor()
-    })
-    setPrompt(newPrompt)
+    setPrompt(utils.composePrompt({ nick: datmouth.getNickname(), color: datmouth.getColor() }))
   }
 }
 
-function getNickname ({ setPrompt, datmouth }) {
+export function getNickname ({ setPrompt, datmouth }) {
   return (...options) => {
     const newNickname = utils.slug(options.join(' '))
+    if (!newNickname) return
     // nickname is preserved once user inputs a new line
     datmouth.updateNickname(newNickname)
     setPrompt(utils.composePrompt({ nick: newNickname, color: datmouth.getColor() }))
   }
 }
 
-function getHistory ({ datmouth, log }) {
+export function getHistory ({ datmouth, log }) {
   return async function (size) {
     const messages = await datmouth.readLast(size)
     const enhancedMessages = utils.aggregateDateLines(messages)
@@ -90,8 +69,8 @@ function getHistory ({ datmouth, log }) {
   }
 }
 
-function help () {
-  console.log(`
+export function help ({ print }) {
+  return () => print(`
                   ${chalk.italic(' -- Only you can see this')}
 
     ...(っ▀¯▀)つ
@@ -102,7 +81,7 @@ function help () {
       /history 4            Displays last 4 messages received
       /colors               Displays color support
       /color hexcolor       Changes nickname color
-      /giphy query          Displays a gif in the terminal
+      /ascii boom           Sends an animated ASCII reaction (/ascii lists them)
       /connected            Shows number of peers connected
       /exit                 Close the app
 

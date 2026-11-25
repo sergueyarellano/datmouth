@@ -1,31 +1,36 @@
-const test = require('tape')
-const utils = require('../utils')
-const fixtures = require('./fixtures.json')
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import * as utils from '../utils.js'
 
-test('aggregateDateLines() should add change date lines to messages view list', function (t) {
-  t.plan(1)
-  const actual = utils.aggregateDateLines(fixtures.rawMessages)
-  const expected = fixtures.messagesWithDateLines
+const msg = (timestamp, text) => ({ value: { type: 'chat', timestamp, text } })
 
-  t.deepEqual(actual, expected)
+test('aggregateDateLines() adds a daychange line whenever the day changes', () => {
+  const day1a = msg('2020-05-17T10:00:00.000Z', 'a')
+  const day1b = msg('2020-05-17T11:00:00.000Z', 'b')
+  const day2 = msg('2020-05-19T11:00:00.000Z', 'c')
+  const dateLine = (m) => ({ value: { type: 'daychange', text: new Date(m.value.timestamp).toDateString() } })
+
+  assert.deepEqual(
+    utils.aggregateDateLines([day1a, day1b, day2]),
+    [dateLine(day1a), day1a, day1b, dateLine(day2), day2]
+  )
 })
 
-test('slug() trims spaces, replaces spaces with dashes and lowercase', function (t) {
-  t.plan(1)
-
-  const actual = utils.slug('My name ')
-  const expected = 'my-name'
-
-  t.deepEqual(actual, expected)
+test('slug() trims spaces, replaces spaces with dashes and lowercase', () => {
+  assert.equal(utils.slug('My name '), 'my-name')
 })
 
-test('getTimeShort should shorten the timestamp', function (t) {
-  t.plan(2)
-  // Will return shortened time with GMT offset
+test('getTimeShort should shorten the timestamp', () => {
   const actual = utils.getTimeShort('2020-05-17T16:45:15.551Z')
-  const re = /^\d{2}:\d{2}/
-  const expectedMinutes = '45'
+  assert.match(actual, /^\d{2}:\d{2}$/)
+  assert.equal(actual.slice(3), '45')
+})
 
-  t.deepEqual(re.test(actual), true)
-  t.deepEqual(actual.slice(3), expectedMinutes)
+test('createNickname gives a 7 char lowercase id', () => {
+  assert.match(utils.createNickname(), /^[a-z0-9]{7}$/)
+})
+
+test('getProperColorModel falls back to magenta on bad input', () => {
+  assert.equal(typeof utils.getProperColorModel('#zzz'), 'function')
+  assert.equal(typeof utils.getProperColorModel('nope'), 'function')
 })

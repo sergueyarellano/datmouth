@@ -1,18 +1,22 @@
 # datmouth
 
-P2P chat client that uses DAT protocol underneath. For ephemeral conversations.
+P2P chat client for the terminal, for ephemeral conversations. Built on the
+[Holepunch](https://holepunch.to) stack, the successor of DAT:
+[hypercore](https://github.com/holepunchto/hypercore),
+[corestore](https://github.com/holepunchto/corestore) and
+[hyperswarm](https://github.com/holepunchto/hyperswarm).
 
-Have you lost your internet connection? 
+Have you lost your internet connection?
 
 Works with peers connected:
 - offline, LAN
-- WAN
+- WAN (hyperswarm holepunches through most NATs)
 
-Inspired by [DAT](https://dat.foundation/) foundation workshops and great packages in the community.
-
-To experiment with kappa architectures check out [kappa-core](https://www.npmjs.com/package/kappa-core) deck, [hyperswarm](https://www.npmjs.com/package/hyperswarm), etc. Thanks to those folks implicated, having too much fun with this :)
+Inspired by [DAT](https://dat.foundation/) foundation workshops and great packages in the community. Thanks to those folks implicated, having too much fun with this :)
 
 # Install
+
+Requires Node.js 22 or newer.
 
 ```
 $ npm install -g datmouth
@@ -24,9 +28,9 @@ $ npm install -g datmouth
 $ datmouth topicname
 ```
 
-Will join the swarm automatically. You can share the topic with a friend and start chatting
+Will join the swarm automatically. You can share the topic with a friend and start chatting.
 
-> Your conversations and gifs are saved to a temp directory. Your system will remove them automatically at some point
+> Your conversations are saved to a temp directory. Your system will remove them automatically at some point
 
 ![](datmouth.gif)
 
@@ -38,6 +42,8 @@ If you already have a `datmouth` client and want to update the version:
 npm -g update datmouth
 ```
 
+> v2 speaks a new protocol (Holepunch instead of DAT), so v1 and v2 clients can't chat with each other. Everyone in a topic should update.
+
 # Already joined a topic?
 
 ```
@@ -47,7 +53,8 @@ Commands:
 - /history 4            Displays last 4 messages received
 - /colors               Displays color support
 - /color #EA8A25        Changes nickname color
-- /giphy boom           Displays a "boom" gif in the terminal (iterm2, node>=v10.19)
+- /ascii boom           Sends an animated "boom" ASCII reaction
+- /ascii                Lists every reaction
 - /connected            Shows number of peers connected
 - /exit                 Close the app
 
@@ -59,8 +66,37 @@ Emacs commands:
 - ALT-F                 Move cursor forward, word by word
 ```
 
+## ASCII reactions
+
+`/ascii <name>` plays a small animated ASCII reaction in everyone's terminal.
+They are built in, so there is no Giphy, no API key and no download: the
+message only carries the name, and each peer plays its own copy. Works in any
+terminal, and the prompt stays usable while it plays.
+
+```
+tableflip  unflip  shrug  wave  dance  boom  heart  coffee
+rocket  fire  cat  ok  sad  facepalm  highfive  random
+```
+
+Aliases and prefixes work too (`/ascii love`, `/ascii table`). `/gif` and
+`/giphy` are kept as shortcuts for `/ascii`.
+
+Want to add one? Append an entry to `art.js` (frames up to 30 columns wide).
+
+# How it works
+
+- Each peer writes its messages to its own hypercore, stored in a corestore.
+- Peers find each other on hyperswarm under `sha256(topic)`.
+- On every connection the corestore replicates all known cores, and a small
+  protomux channel (`datmouth/keys/v1`) exchanges writer keys. Keys are
+  gossiped onwards, so you also get messages from peers you are not directly
+  connected to.
+- The chat is the union of all writers, sorted by timestamp.
+
 # Want to contribute?
 
 Love to work with P2P enthusiasts. Fork the repo and `npm install` to install node dependencies.
 
-to create instances, just do `node cli test-topic`
+- create instances: `node cli.js test-topic`
+- run the tests: `npm test` (they use an in-process DHT testnet, no internet needed)
+- use your own DHT bootstrap nodes: `node cli.js test-topic --bootstrap 192.168.1.10:49737`

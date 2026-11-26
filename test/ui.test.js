@@ -2,14 +2,14 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { getCompleter, countRows } from '../ui.js'
 
-const completer = getCompleter(() => ['/help', '/history', '@dude'])
+const completer = getCompleter(() => [':help', ':history', '@dude'])
 
 test('completer completes a unique command', () => {
-  assert.deepEqual(completer('/he'), [['/help'], '/he'])
+  assert.deepEqual(completer(':he'), [[':help'], ':he'])
 })
 
 test('completer lists several hits', () => {
-  assert.deepEqual(completer('/h'), [['/help', '/history'], '/h'])
+  assert.deepEqual(completer(':h'), [[':help', ':history'], ':h'])
 })
 
 test('completer completes a nickname mid sentence', () => {

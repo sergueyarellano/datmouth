@@ -1,9 +1,10 @@
 import readline from 'node:readline'
 import { stripVTControlCharacters } from 'node:util'
+import { parseCommandLine, completions } from './cmdline.js'
 
 export function createUI ({ prompt = '> ', onLine = () => {}, commands = {}, templates = {}, input = process.stdin, output = process.stdout } = {}) {
   const extraCompletions = new Set()
-  const getCompletions = () => Object.keys(commands).map(c => '/' + c).concat([...extraCompletions])
+  const getCompletions = () => completions().concat([...extraCompletions])
 
   const rl = readline.createInterface({
     input,
@@ -66,14 +67,10 @@ export function createUI ({ prompt = '> ', onLine = () => {}, commands = {}, tem
   rl.on('line', async (line) => {
     if (tty) eraseSubmittedLine(output, rl.getPrompt(), line)
     try {
-      if (line.startsWith('/')) {
-        const words = line.match(/[^\s/]+/g) || []
-        const command = commands[words[0]]
-        if (typeof command === 'function') await command(...words.slice(1))
-        else print(`Unknown command "${line.trim()}". Try /help`)
-      } else if (line.trim().length > 0) {
-        await onLine(line)
-      }
+      const parsed = parseCommandLine(line)
+      if (parsed && typeof commands[parsed.command] === 'function') await commands[parsed.command](...parsed.args)
+      else if (parsed) print(`E492: Not an editor command: ${parsed.input}  (try :h)`)
+      else if (line.trim().length > 0) await onLine(line)
     } catch (err) {
       print(`⚠️  ${err.message}`)
     }
@@ -115,7 +112,7 @@ export function getCompleter (getCompletions) {
   return (line) => {
     if (!line.length) return [[], line]
 
-    const lineMatch = line.match(/(?:.*)?([/.@#][^\s]*)/)
+    const lineMatch = line.match(/(?:.*)?([:.@#][^\s]*)/)
     const possibleHit = lineMatch && lineMatch[1]
     if (!possibleHit) return [[], line]
 

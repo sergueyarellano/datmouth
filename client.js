@@ -28,16 +28,13 @@ export default async function client (topic, { swarmOpts } = {}) {
     onLine: datmouth.publish,
     templates,
     commands: {
-      nick: commands.getNickname({ datmouth, setPrompt }),
-      history: commands.getHistory({ datmouth, log }),
-      color: commands.getColor({ datmouth, setPrompt }),
-      colors: commands.colors({ print }),
       help: commands.help({ print }),
+      quit: exit,
+      nick: commands.getNickname({ datmouth, setPrompt }),
+      messages: commands.getHistory({ datmouth, log }),
+      colorscheme: commands.getColorscheme({ datmouth, setPrompt, print }),
       ascii: commands.getAscii({ datmouth, print }),
-      gif: commands.getAscii({ datmouth, print }),
-      giphy: commands.getAscii({ datmouth, print }),
-      connected: () => log('connected', datmouth.getActiveConnections()),
-      exit
+      peers: () => log('connected', datmouth.getActiveConnections())
     }
   })
 

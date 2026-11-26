@@ -8,25 +8,24 @@ export function getAscii ({ datmouth, print }) {
     if (art) return datmouth.publish(':ascii#' + art.names[0])
     const query = words.join(' ')
     print((query ? `No ASCII reaction called "${query}". ` : '') +
-      'Try one of: ' + listArt().join(', ') + ', random')
+      'Try one of: ' + listArt().concat('random').map(n => ':' + n).join(' '))
   }
 }
 
-export function colors ({ print }) {
-  return () => print(`
-                  ${chalk.italic(' -- Only you can see this')}
+function colorHelp () {
+  return `
 
     (╯°□°）╯︵ ┻━┻
 
     1 Basic color support (16 colors):
       try:
-      /color red
+      :colo red
 
       https://www.npmjs.com/package/chalk#colors
 
     2 256 color support and Truecolor support (16 million colors)
       try:
-      /color #DEADED
+      :colo #DEADED
 
       #C4462D red     #EA8A25 orange  #F4F008 yellow
       #77F408 green   #08B7F4 blue    #F008F4 pink
@@ -35,12 +34,12 @@ export function colors ({ print }) {
 
       (Wrong pick defaults to magenta)
 
-                  ${chalk.italic('Only you can see this --')}
-    `)
+    `
 }
 
-export function getColor ({ datmouth, setPrompt }) {
-  return (color = 'magenta') => {
+export function getColorscheme ({ datmouth, setPrompt, print }) {
+  return (color) => {
+    if (!color) return print(colorHelp())
     datmouth.setColor(color)
     setPrompt(utils.composePrompt({ nick: datmouth.getNickname(), color: datmouth.getColor() }))
   }
@@ -71,19 +70,20 @@ export function getHistory ({ datmouth, log }) {
 
 export function help ({ print }) {
   return () => print(`
-                  ${chalk.italic(' -- Only you can see this')}
 
     ...(っ▀¯▀)つ
 
-    Commands:
-      /help                 Displays this message
-      /nick yournickname    Changes your actual nickname
-      /history 4            Displays last 4 messages received
-      /colors               Displays color support
-      /color hexcolor       Changes nickname color
-      /ascii boom           Sends an animated ASCII reaction (/ascii lists them)
-      /connected            Shows number of peers connected
-      /exit                 Close the app
+    Commands (Neovim style, the part in [brackets] is optional):
+      :h[elp]               Displays this message
+      :ni[ck] yournickname  Changes your actual nickname
+      :mes[sages] 4         Displays last 4 messages received (also :his[tory])
+      :colo[rscheme]        Displays color support
+      :colo[rscheme] #hex   Changes nickname color
+      :boom                 Sends an animated ASCII reaction (:a lists them all)
+      :pe[ers]              Shows number of peers connected
+      :q[uit]               Close the app (also :q! :wq :x :exit)
+
+      Tab completes commands and @nicknames.
 
     Emacs commands:
       CTRL-U                Remove from cursor to start of line
@@ -92,6 +92,5 @@ export function help ({ print }) {
       ALT-B                 Move cursor backwards, word by word
       ALT-F                 Move cursor forward, word by word
 
-                  ${chalk.italic('Only you can see this --')}
     `)
 }

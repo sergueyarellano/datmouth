@@ -46,17 +46,22 @@ npm -g update datmouth
 
 # Already joined a topic?
 
+Commands start with `:` like in Neovim, and can be shortened the Vim way:
+`:h`, `:he` and `:help` all work. The part in brackets is optional.
+
 ```
 Commands:
-- /help                 Displays this message
-- /nick yournickname    Changes your actual nickname
-- /history 4            Displays last 4 messages received
-- /colors               Displays color support
-- /color #EA8A25        Changes nickname color
-- /ascii boom           Sends an animated "boom" ASCII reaction
-- /ascii                Lists every reaction
-- /connected            Shows number of peers connected
-- /exit                 Close the app
+- :h[elp]                 Displays this message
+- :ni[ck] yournickname    Changes your actual nickname
+- :mes[sages] 4           Displays last 4 messages received (also :his[tory])
+- :colo[rscheme]          Displays color support
+- :colo[rscheme] #EA8A25  Changes nickname color
+- :boom                   Sends an animated "boom" ASCII reaction
+- :a[scii]                Lists every reaction
+- :pe[ers]                Shows number of peers connected
+- :q[uit]                 Close the app (also :q! :wq :x :exit)
+
+Tab completes commands and @nicknames.
 
 Emacs commands:
 - CTRL-U                Remove from cursor to start of line
@@ -66,9 +71,12 @@ Emacs commands:
 - ALT-F                 Move cursor forward, word by word
 ```
 
+v2.1 replaced the old `/` commands. A line like `:)` or `:D` is sent as chat;
+a lowercase word after `:` that isn't a command gets Vim's `E492` instead.
+
 ## ASCII reactions
 
-`/ascii <name>` plays a small animated ASCII reaction in everyone's terminal.
+`:<name>`, like `:boom`, plays a small animated ASCII reaction in everyone's terminal.
 They are built in, so there is no Giphy, no API key and no download: the
 message only carries the name, and each peer plays its own copy. Works in any
 terminal, and the prompt stays usable while it plays.
@@ -78,8 +86,8 @@ tableflip  unflip  shrug  wave  dance  boom  heart  coffee
 rocket  fire  cat  ok  sad  facepalm  highfive  random
 ```
 
-Aliases and prefixes work too (`/ascii love`, `/ascii table`). `/gif` and
-`/giphy` are kept as shortcuts for `/ascii`.
+Aliases work too (`:love`, `:flip`, `:+1`). `:a` lists them, and `:a table`
+still works with a prefix. If a name ever matched a command, the command would win.
 
 Want to add one? Append an entry to `art.js` (frames up to 30 columns wide).
 
